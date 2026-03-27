@@ -1250,7 +1250,15 @@ function parseOrderFile(file,type){
       renderSumCards(type+'Sum',tally,document.getElementById(type+'Date').value,color);
       renderProductTbody(type+'Tbody',tally);renderWarnBox(type+'Warn',warns,unrecs,tally);
       document.getElementById(type+'Preview').classList.add('show');document.getElementById(type+'Btn').disabled=false;
-    }catch(err){showResult(type+'Result','err','파싱 오류: '+err.message);}
+    }catch(err){
+      const msg=err.message||'';
+      if(msg.toLowerCase().includes('password')){
+        showResult(type+'Result','err',
+          '🔒 비밀번호가 걸린 파일이에요 · 엑셀에서 <b>파일 → 정보 → 통합문서 보호 → 암호화 → 암호 삭제</b> 후 다시 올려주세요');
+      } else {
+        showResult(type+'Result','err','파싱 오류: '+msg);
+      }
+    }
   };
   reader.readAsArrayBuffer(file);
 }
