@@ -238,6 +238,14 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:13px;line-height:1.5
   padding:20px 14px;text-align:center;cursor:pointer;background:var(--glass-bg-dark);transition:all .15s;}
 .dropzone:hover,.dropzone.over{border-color:rgba(58,58,240,.4);background:var(--fc-l)}
 .dropzone.has-file{border-color:rgba(26,138,74,.5);background:var(--ac-l)}
+.dz-wrap{position:relative;}
+.dz-clear{display:none;position:absolute;top:6px;right:8px;z-index:10;
+  width:22px;height:22px;border-radius:50%;border:none;
+  background:rgba(0,0,0,0.12);color:#666;font-size:13px;line-height:1;
+  cursor:pointer;align-items:center;justify-content:center;
+  transition:all .12s;font-weight:700;}
+.dz-clear:hover{background:rgba(212,32,32,.15);color:var(--red);}
+.dz-wrap.has-file .dz-clear{display:flex;}
 .dz-ico{font-size:18px;margin-bottom:5px}
 .dz-main{font-size:12.5px;color:var(--t2);font-weight:500;margin-bottom:2px}
 .dz-sub{font-size:10px;color:var(--t4)}
@@ -377,18 +385,21 @@ tbody tr:last-child td{border-bottom:none}
         <div class="sec-sub">매주 화요일 · 재업 가능 → fc_예측 시트</div>
         <div class="sec-sub">파일명 : 네이버_브랜드스토어_올리브_예상물량_*.xlsx</div>
       </div>
-      <div class="date-chip" id="fcChip" onclick="dpOpen('fc')">
+      <div class="date-chip" id="fcChip" onclick="chipClick('fc')">
         <span class="chip-ico">📅</span>
         <span class="chip-txt" id="fcChipTxt">파일 올리면 설정</span>
       </div>
     </div>
     <div class="sec-body">
-      <div class="dropzone" id="fcDrop" onclick="document.getElementById('fcFile').click()"
-        ondragover="dzOver(event,'fcDrop')" ondragleave="dzLeave('fcDrop')" ondrop="dzDrop(event,'fcDrop',parseFc)">
-        <input type="file" id="fcFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parseFc)">
-        <div class="dz-ico" id="fcIco">📊</div>
-        <div class="dz-main" id="fcMain">예상물량 엑셀 드래그 또는 클릭</div>
-        <div class="dz-sub" id="fcSub">_네이버_브랜드스토어_올리브_예상물량_*.xlsx</div>
+      <div class="dz-wrap" id="fcWrap">
+        <button class="dz-clear" onclick="clearFile('fc')" title="파일 제거">✕</button>
+        <div class="dropzone" id="fcDrop" onclick="document.getElementById('fcFile').click()"
+          ondragover="dzOver(event,'fcDrop')" ondragleave="dzLeave('fcDrop')" ondrop="dzDrop(event,'fcDrop',parseFc)">
+          <input type="file" id="fcFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parseFc)">
+          <div class="dz-ico" id="fcIco">📊</div>
+          <div class="dz-main" id="fcMain">예상물량 엑셀 드래그 또는 클릭</div>
+          <div class="dz-sub" id="fcSub">_네이버_브랜드스토어_올리브_예상물량_*.xlsx</div>
+        </div>
       </div>
       <div class="preview-wrap" id="fcPreview">
         <div class="sum-row" id="fcSum"></div>
@@ -408,7 +419,7 @@ tbody tr:last-child td{border-bottom:none}
         <div class="sec-sub">매일 오전 · 상품성과 엑셀 → pv_전일결제 시트</div>
         <div class="sec-sub">파일명 : 상품성과_2026-03-13_2026-03-26.xlsx</div>
       </div>
-      <div class="date-chip" id="pvChip" onclick="dpOpen('pv')">
+      <div class="date-chip" id="pvChip" onclick="chipClick('pv')">
         <span class="chip-ico">📅</span>
         <span class="chip-txt" id="pvChipTxt">날짜 선택</span>
       </div>
@@ -416,12 +427,15 @@ tbody tr:last-child td{border-bottom:none}
     <div class="sec-body">
       <div class="auto-tag" id="pvAutoTag">📁 파일에서 날짜 자동 감지됨</div>
       <input type="hidden" id="pvDate">
-      <div class="dropzone" id="pvDrop" onclick="document.getElementById('pvFile').click()"
-        ondragover="dzOver(event,'pvDrop')" ondragleave="dzLeave('pvDrop')" ondrop="dzDrop(event,'pvDrop',parsePv)">
-        <input type="file" id="pvFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parsePv)">
-        <div class="dz-ico" id="pvIco">📥</div>
-        <div class="dz-main" id="pvMain">상품성과 엑셀 드래그 또는 클릭</div>
-        <div class="dz-sub" id="pvSub">통계 › 상품성과 › 엑셀 다운로드</div>
+      <div class="dz-wrap" id="pvWrap">
+        <button class="dz-clear" onclick="clearFile('pv')" title="파일 제거">✕</button>
+        <div class="dropzone" id="pvDrop" onclick="document.getElementById('pvFile').click()"
+          ondragover="dzOver(event,'pvDrop')" ondragleave="dzLeave('pvDrop')" ondrop="dzDrop(event,'pvDrop',parsePv)">
+          <input type="file" id="pvFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parsePv)">
+          <div class="dz-ico" id="pvIco">📥</div>
+          <div class="dz-main" id="pvMain">상품성과 엑셀 드래그 또는 클릭</div>
+          <div class="dz-sub" id="pvSub">통계 › 상품성과 › 엑셀 다운로드</div>
+        </div>
       </div>
       <div class="preview-wrap" id="pvPreview">
         <div class="sum-row" id="pvSum"></div>
@@ -442,7 +456,7 @@ tbody tr:last-child td{border-bottom:none}
         <div class="sec-sub">매일 오전 · 선택주문(발주 전) → mx_출고최대 시트</div>
         <div class="sec-sub">파일명 : 스마트스토어_선택주문발주발송관리_*.xlsx</div>
       </div>
-      <div class="date-chip" id="mxChip" onclick="dpOpen('mx')">
+      <div class="date-chip" id="mxChip" onclick="chipClick('mx')">
         <span class="chip-ico">📅</span>
         <span class="chip-txt" id="mxChipTxt">날짜 선택</span>
       </div>
@@ -450,12 +464,15 @@ tbody tr:last-child td{border-bottom:none}
     <div class="sec-body">
       <div class="auto-tag" id="mxAutoTag">📁 파일에서 날짜 자동 감지됨</div>
       <input type="hidden" id="mxDate">
-      <div class="dropzone" id="mxDrop" onclick="document.getElementById('mxFile').click()"
-        ondragover="dzOver(event,'mxDrop')" ondragleave="dzLeave('mxDrop')" ondrop="dzDrop(event,'mxDrop',parseMx)">
-        <input type="file" id="mxFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parseMx)">
-        <div class="dz-ico" id="mxIco">📋</div>
-        <div class="dz-main" id="mxMain">선택주문발주발송관리_*.xlsx 드래그 또는 클릭</div>
-        <div class="dz-sub" id="mxSub">신규주문(발주 전) 스냅샷</div>
+      <div class="dz-wrap" id="mxWrap">
+        <button class="dz-clear" onclick="clearFile('mx')" title="파일 제거">✕</button>
+        <div class="dropzone" id="mxDrop" onclick="document.getElementById('mxFile').click()"
+          ondragover="dzOver(event,'mxDrop')" ondragleave="dzLeave('mxDrop')" ondrop="dzDrop(event,'mxDrop',parseMx)">
+          <input type="file" id="mxFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parseMx)">
+          <div class="dz-ico" id="mxIco">📋</div>
+          <div class="dz-main" id="mxMain">선택주문발주발송관리_*.xlsx 드래그 또는 클릭</div>
+          <div class="dz-sub" id="mxSub">신규주문(발주 전) 스냅샷</div>
+        </div>
       </div>
       <div class="preview-wrap" id="mxPreview">
         <div class="sum-row" id="mxSum"></div>
@@ -476,7 +493,7 @@ tbody tr:last-child td{border-bottom:none}
         <div class="sec-sub">매일 오후 · 전체주문(발주확인) → ac_실제출고 시트</div>
         <div class="sec-sub">파일명 : 스마트스토어_전체주문발주발송관리_*.xlsx</div>
       </div>
-      <div class="date-chip" id="acChip" onclick="dpOpen('ac')">
+      <div class="date-chip" id="acChip" onclick="chipClick('ac')">
         <span class="chip-ico">📅</span>
         <span class="chip-txt" id="acChipTxt">날짜 선택</span>
       </div>
@@ -484,12 +501,15 @@ tbody tr:last-child td{border-bottom:none}
     <div class="sec-body">
       <div class="auto-tag" id="acAutoTag">📁 파일에서 날짜 자동 감지됨</div>
       <input type="hidden" id="acDate">
-      <div class="dropzone" id="acDrop" onclick="document.getElementById('acFile').click()"
-        ondragover="dzOver(event,'acDrop')" ondragleave="dzLeave('acDrop')" ondrop="dzDrop(event,'acDrop',parseAc)">
-        <input type="file" id="acFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parseAc)">
-        <div class="dz-ico" id="acIco">📦</div>
-        <div class="dz-main" id="acMain">전체주문발주발송관리_*.xlsx 드래그 또는 클릭</div>
-        <div class="dz-sub" id="acSub">오후 발주확인 상태 파일</div>
+      <div class="dz-wrap" id="acWrap">
+        <button class="dz-clear" onclick="clearFile('ac')" title="파일 제거">✕</button>
+        <div class="dropzone" id="acDrop" onclick="document.getElementById('acFile').click()"
+          ondragover="dzOver(event,'acDrop')" ondragleave="dzLeave('acDrop')" ondrop="dzDrop(event,'acDrop',parseAc)">
+          <input type="file" id="acFile" accept=".xlsx,.xls" style="display:none" onchange="fileChange(event,parseAc)">
+          <div class="dz-ico" id="acIco">📦</div>
+          <div class="dz-main" id="acMain">전체주문발주발송관리_*.xlsx 드래그 또는 클릭</div>
+          <div class="dz-sub" id="acSub">오후 발주확인 상태 파일</div>
+        </div>
       </div>
       <div class="preview-wrap" id="acPreview">
         <div class="sum-row" id="acSum"></div>
@@ -769,7 +789,38 @@ function dpHoverDay(iso){
   dpRenderQuick();
 }
 
-// 그리드 이벤트 위임 — 한 번만 등록
+// 칩 클릭 — 파일 감지됐으면 달력 안 열고 토스트만 표시
+function chipClick(ctx){
+  // fc는 항상 달력 열기 (기간 선택 필요)
+  if(ctx==='fc'){ dpOpen('fc'); return; }
+  // pv/mx/ac: 파일 올렸고 날짜 자동감지 됐으면 달력 차단
+  if(fileState[ctx]){
+    const autoTag=document.getElementById(ctx+'AutoTag');
+    if(autoTag&&autoTag.classList.contains('show')){
+      // 토스트 표시
+      showChipToast(ctx,'📁 파일에서 날짜 자동 감지됨 · 파일 삭제 후 변경 가능');
+      return;
+    }
+  }
+  dpOpen(ctx);
+}
+
+function showChipToast(ctx,msg){
+  const chip=document.getElementById(ctx+'Chip');
+  const existing=document.getElementById('chipToast');
+  if(existing)existing.remove();
+  const toast=document.createElement('div');
+  toast.id='chipToast';
+  toast.style.cssText=`position:fixed;z-index:400;background:#0a0a0f;color:#fff;
+    font-size:11.5px;font-weight:500;padding:8px 14px;border-radius:10px;
+    box-shadow:0 4px 16px rgba(0,0,0,.18);white-space:nowrap;animation:fadeIn .15s ease;`;
+  toast.textContent=msg;
+  document.body.appendChild(toast);
+  const rect=chip.getBoundingClientRect();
+  toast.style.left=Math.min(rect.left,window.innerWidth-toast.offsetWidth-12)+'px';
+  toast.style.top=(rect.bottom+6)+'px';
+  setTimeout(()=>toast.remove(),2500);
+}
 document.addEventListener('DOMContentLoaded', ()=>{
   const grid = document.getElementById('dpGrid');
   grid.addEventListener('click', e=>{
@@ -986,12 +1037,44 @@ function renderWarnBox(warnId,warns,unrecs,tally){
   }
   el.innerHTML=msgs.map(m=>`<div class="result warn" style="margin-top:4px">⚠️ ${m}</div>`).join('');
 }
+// 파일 감지 상태 저장
+const fileState={fc:false,pv:false,mx:false,ac:false};
+
 function setDropOk(pfx,fname,tally){
   document.getElementById(pfx+'Drop').classList.add('has-file');
+  document.getElementById(pfx+'Wrap').classList.add('has-file');
   document.getElementById(pfx+'Ico').textContent='✅';
   document.getElementById(pfx+'Main').textContent=fname;
   const tot=Object.entries(tally).filter(([k])=>!['개별토핑','개별요거트'].includes(k)).reduce((s,[,v])=>s+v,0);
   document.getElementById(pfx+'Sub').textContent=`총 ${tot.toLocaleString()}개 집계됨`;
+  fileState[pfx]=true;
+}
+
+// 파일 초기화
+const DZ_DEFAULTS={
+  fc:{ico:'📊',main:'예상물량 엑셀 드래그 또는 클릭',sub:'_네이버_브랜드스토어_올리브_예상물량_*.xlsx'},
+  pv:{ico:'📥',main:'상품성과 엑셀 드래그 또는 클릭',sub:'통계 › 상품성과 › 엑셀 다운로드'},
+  mx:{ico:'📋',main:'선택주문발주발송관리_*.xlsx 드래그 또는 클릭',sub:'신규주문(발주 전) 스냅샷'},
+  ac:{ico:'📦',main:'전체주문발주발송관리_*.xlsx 드래그 또는 클릭',sub:'오후 발주확인 상태 파일'},
+};
+function clearFile(pfx){
+  const d=DZ_DEFAULTS[pfx];
+  document.getElementById(pfx+'Drop').classList.remove('has-file');
+  document.getElementById(pfx+'Wrap').classList.remove('has-file');
+  document.getElementById(pfx+'Ico').textContent=d.ico;
+  document.getElementById(pfx+'Main').textContent=d.main;
+  document.getElementById(pfx+'Sub').textContent=d.sub;
+  document.getElementById(pfx+'File').value='';
+  document.getElementById(pfx+'Preview')?.classList.remove('show');
+  document.getElementById(pfx+'Result').innerHTML='';
+  document.getElementById(pfx+'AutoTag')?.classList.remove('show');
+  document.getElementById(pfx+'Btn').disabled=true;
+  fileState[pfx]=false;
+  // 칩 초기화
+  if(pfx==='pv')setChip('pv',chipDate(yesterday()),true);
+  else if(pfx==='mx')setChip('mx',chipDate(today()),true);
+  else if(pfx==='ac')setChip('ac',chipDate(today()),true);
+  else if(pfx==='fc'){setChip('fc','파일 올리면 설정',false);fcAllRows=null;fcItemData=null;fcDateCols=null;}
 }
 function extractDateFromFilename(filename){const m=filename.match(/(\d{8})/);if(!m)return null;const s=m[1];const d=`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;const dt=parseISO(d);return isNaN(dt)?null:d;}
 function extractDateFromOrderNo(n){const s=String(n).replace(/\D/g,'').slice(0,8);if(s.length<8)return null;const d=`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`;const dt=parseISO(d);return isNaN(dt)?null:d;}
@@ -1005,18 +1088,25 @@ function parseFc(file){
     try{
       const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
       const sn=wb.SheetNames.find(n=>n.includes('물량예측'))||wb.SheetNames[0];
-      const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null,raw:false});
+      // raw:true 로 Date 객체 그대로 읽기
+      const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null,raw:true});
 
-      // Row18 (idx 17): 날짜 헤더 — Date 객체 또는 ISO 문자열
+      // Row18 (idx 17): 날짜 헤더
       const dateRow=raw[17]||[];
       const dateCols=[];
       for(let c=0;c<dateRow.length;c++){
         const v=dateRow[c];
         let dt=null;
         if(v instanceof Date) dt=v;
-        else if(typeof v==='string'&&v.match(/\d{4}-\d{2}-\d{2}/)) dt=new Date(v+'T00:00:00');
-        else if(typeof v==='number'&&v>40000) dt=new Date((v-25569)*86400*1000);
-        if(!dt||isNaN(dt)) continue;
+        else if(typeof v==='number'&&v>40000){
+          // Excel serial → JS Date (UTC 기준 보정)
+          dt=new Date(Math.round((v-25569)*86400*1000));
+        }
+        else if(typeof v==='string'){
+          const m=v.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
+          if(m) dt=new Date(`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}T00:00:00`);
+        }
+        if(!dt||isNaN(dt.getTime())) continue;
         const dow=DOW_KO[dt.getDay()];
         if(['월','화','수','목','금'].includes(dow))
           dateCols.push({col:c, date:isoDate(dt), dow, dtObj:dt});
@@ -1135,7 +1225,14 @@ function parseOrderFile(file,type){
   const reader=new FileReader();
   reader.onload=ev=>{
     try{
-      const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
+      // 비밀번호 1111 자동 해제
+      let wb;
+      try{
+        wb=XLSX.read(ev.target.result,{type:'array',cellDates:true,password:'1111'});
+      }catch(e){
+        // 비밀번호 없는 파일도 처리
+        wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
+      }
       const json=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{range:1,defval:''});
       let autoDate=null;
       if(json.length>0){const no=String(json[0]['주문번호']||json[0]['상품주문번호']||'');autoDate=extractDateFromOrderNo(no);}
