@@ -499,6 +499,12 @@ function sbClick(el,target){
 }
 
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzJ5PcJZetp7Pqb90YJdBW8Ofb745jikTtd0DaufAIwsK7nhXbilvsuwEG1cq4x6tsEew/exec";
+const SHEET_ID="1Y5xDhV_6UcdNOtivYdkOO6bduYgdkNmB6_w4zfPXXQM";
+const GID={
+  fc:'841166294', pv:'1242586257', mx:'1642458068', ac:'30994408',
+  unship:'113580769', 품목기준표:'1280336969', sku기준표:'1480827801',
+  행사정보:'611987186', 행사SID목록:'598629104', 연동로그:'688904014'
+};
 
 // ── 유틸 ─────────────────────────────────────────────────────────────
 const DOW_KO=['일','월','화','수','목','금','토'];
@@ -894,27 +900,43 @@ function parseFc(file){
   reader.onload=ev=>{
     try{
       const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
-      const sn=wb.SheetNames.find(n=>n.includes('물량예측'))||wb.SheetNames[0];
-      const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null,raw:false});
-      const dateRow=raw[17]||[];
+      // 첫 번째 시트 사용 (브랜드스토어 예상물량 파일)
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null,raw:false});
+
+      // Row1: E열(idx4)부터 ISO날짜
+      const headerRow=raw[0]||[];
       const dateCols=[];
-      for(let c=0;c<dateRow.length;c++){
-        const v=dateRow[c];let dt=null;
-        if(v instanceof Date)dt=v;
-        else if(typeof v==='string'&&v.match(/\d{4}-\d{2}-\d{2}/))dt=new Date(v);
-        else if(typeof v==='number'&&v>40000)dt=new Date((v-25569)*86400*1000);
-        if(dt&&!isNaN(dt)){const dow=DOW_KO[dt.getDay()];if(['월','화','수','목','금'].includes(dow))dateCols.push({col:c,date:isoDate(dt),dow,dtObj:dt});}
+      for(let c=4;c<headerRow.length;c++){
+        const v=headerRow[c];
+        if(!v)continue;
+        let dtStr=null;
+        if(typeof v==='string'&&v.match(/^\d{4}-\d{2}-\d{2}/))dtStr=v.slice(0,10);
+        else if(v instanceof Date)dtStr=isoDate(v);
+        else if(typeof v==='number'&&v>40000){const d=new Date((v-25569)*86400*1000);dtStr=isoDate(d);}
+        if(!dtStr)continue;
+        const dt=parseISO(dtStr);
+        const dow=DOW_KO[dt.getDay()];
+        if(['월','화','수','목','금'].includes(dow))
+          dateCols.push({col:c,date:dtStr,dow,dtObj:dt});
       }
-      if(!dateCols.length)throw new Error('날짜 헤더를 찾을 수 없습니다');
+      if(!dateCols.length)throw new Error('날짜 헤더를 찾을 수 없습니다 (Row1, E열~)');
+
+      // Row2~: ColB(idx1)=product_code
       const itemData=[];
-      for(let r=20;r<Math.min(raw.length,60);r++){
-        const row=raw[r];if(!row||!row[1])continue;
-        const code=FC_NAME_MAP[String(row[1]).trim()];if(!code)continue;
+      for(let r=1;r<raw.length;r++){
+        const row=raw[r];if(!row)continue;
+        const code=String(row[1]||'').trim();if(!code)continue;
         const p=PRODUCTS.find(x=>x.code===code);if(!p)continue;
         const vals={};
-        dateCols.forEach(dc=>{const v=row[dc.col];vals[dc.date]=v!=null&&v!==''&&!isNaN(Number(v))?parseInt(Number(v)):0;});
+        dateCols.forEach(dc=>{
+          const v=row[dc.col];
+          vals[dc.date]=v!=null&&v!==''&&!isNaN(Number(v))?parseInt(Number(v)):0;
+        });
         itemData.push({code,p,vals});
       }
+      if(!itemData.length)throw new Error('품목 데이터 없음 — ColB에 product_code 확인');
+
       fcItemData=itemData;fcDateCols=dateCols;
       fcAllRows=[];
       itemData.forEach(({code,vals})=>Object.entries(vals).forEach(([date,qty])=>{if(qty>0)fcAllRows.push({code,date,qty});}));
@@ -922,10 +944,10 @@ function parseFc(file){
       const allDates=dateCols.map(d=>d.date).sort();
       dpState.fcAvailDates=allDates;
 
-      // 기본 선택: 다음주 화 ~ 다다음주 월 (월요일 기준 주)
+      // 기본 선택: 다음주 화 ~ 다다음주 월
       const mon=startOfWeek(new Date());
-      const nextTue=isoDate(addDays(mon,8));   // 다음주 화요일
-      const nextNextMon=isoDate(addDays(mon,14)); // 다다음주 월요일
+      const nextTue=isoDate(addDays(mon,8));
+      const nextNextMon=isoDate(addDays(mon,14));
       dpState.start=allDates.find(d=>d>=nextTue)||allDates[0];
       dpState.end=allDates.filter(d=>d<=nextNextMon).slice(-1)[0]||allDates.slice(-1)[0];
       const s=parseISO(dpState.start);
@@ -936,7 +958,6 @@ function parseFc(file){
       document.getElementById('fcMain').textContent=file.name;
       document.getElementById('fcSub').textContent=`${allDates.length}일 데이터 · 헤더 칩 클릭으로 기간 조정`;
 
-      // 칩 업데이트
       const biz=bizDays(dpState.start,dpState.end);
       setChip('fc',`${chipDate(dpState.start)} ~ ${chipDate(dpState.end)} · ${biz}일`,true);
 
