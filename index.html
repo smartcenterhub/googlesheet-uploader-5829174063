@@ -57,8 +57,37 @@ body{font-family:'Inter',-apple-system,sans-serif;font-size:13px;line-height:1.5
 .app-layout{display:flex;min-height:calc(100vh - var(--hh));}
 .sidebar{width:200px;flex-shrink:0;background:rgba(255,255,255,0.82);
   backdrop-filter:blur(20px);border-right:1px solid var(--glass-border-subtle);
-  padding:20px 0;position:sticky;top:var(--hh);height:calc(100vh - var(--hh));
-  overflow-y:auto;}
+  position:sticky;top:var(--hh);height:calc(100vh - var(--hh));
+  display:flex;flex-direction:column;overflow:hidden;}
+.sb-top{padding:20px 0 8px;flex:1;overflow-y:auto;}
+/* ── 업로드 로그 패널 ── */
+.sb-log{flex-shrink:0;display:flex;flex-direction:column;
+  border-top:1px solid var(--glass-border-subtle);max-height:260px;}
+.sb-log-head{padding:7px 16px 4px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sb-log-title{font-size:9.5px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.08em;}
+.sb-log-clear{font-size:9.5px;color:var(--t4);cursor:pointer;padding:1px 4px;border-radius:4px;
+  border:none;background:none;font-family:inherit;transition:all .1s;}
+.sb-log-clear:hover{color:var(--red);background:var(--red-l);}
+.sb-log-list{overflow-y:auto;max-height:200px;padding:0 0 4px;}
+.sb-log-list::-webkit-scrollbar{width:2px;}
+.sb-log-list::-webkit-scrollbar-thumb{background:var(--t4);border-radius:2px;}
+.sb-log-empty{padding:12px 16px;font-size:10.5px;color:var(--t4);text-align:center;}
+.sb-log-item{padding:6px 12px;border-bottom:1px solid rgba(0,0,0,0.04);animation:fadeIn .2s ease;}
+.sb-log-item:last-child{border-bottom:none;}
+.sb-log-row1{display:flex;align-items:center;gap:5px;margin-bottom:2px;}
+.sb-log-badge{font-size:8.5px;font-weight:800;padding:1px 5px;border-radius:3px;flex-shrink:0;letter-spacing:.02em;}
+.sb-log-badge.fc{background:var(--fc-m);color:var(--fc);}
+.sb-log-badge.pv{background:var(--pv-m);color:var(--pv);}
+.sb-log-badge.mx{background:var(--mx-m);color:var(--mx);}
+.sb-log-badge.ac{background:var(--ac-m);color:var(--ac);}
+.sb-log-badge.undo{background:rgba(124,92,191,0.18);color:#5a3a9a;}
+.sb-log-action{font-size:10px;font-weight:600;color:var(--tx);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-log-status{font-size:9px;font-weight:700;flex-shrink:0;}
+.sb-log-status.ok{color:var(--ac);}
+.sb-log-status.err{color:var(--red);}
+.sb-log-status.undo{color:#7c5cbf;}
+.sb-log-detail{font-size:9.5px;color:var(--t3);line-height:1.4;word-break:keep-all;}
+.sb-log-time{font-size:8.5px;color:var(--t4);margin-top:1px;}
 .sb-section{margin-bottom:4px;}
 .sb-section-title{font-size:9.5px;font-weight:700;color:var(--t4);text-transform:uppercase;
   letter-spacing:.08em;padding:6px 16px 4px;}
@@ -299,11 +328,124 @@ tbody tr:last-child td{border-bottom:none}
 .result.err{background:var(--red-l);border-color:var(--red);color:var(--red)}
 .result.warn{background:var(--mx-l);border-color:var(--mx);color:var(--mx)}
 .warn-box{display:flex;flex-direction:column;gap:4px}
+/* ── 미기입 알림 ── */
+.missing-box{border-radius:var(--r-sm);padding:7px 10px;font-size:10.5px;line-height:1.55;
+  border-left:3px solid;margin-bottom:2px;}
+.missing-box.loading{background:rgba(0,0,0,.03);border-color:var(--t4);color:var(--t3);}
+.missing-box.ok{background:var(--ac-l);border-color:var(--ac);color:var(--ac);font-weight:600;}
+.missing-box.warn{background:rgba(254,240,138,.35);border-color:#c8a800;color:#7a6400;}
+.missing-box.none{display:none;}
+.miss-title{font-weight:700;margin-bottom:2px;}
+.miss-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:1px;}
+.miss-date{font-size:10px;font-weight:700;color:#7a6400;background:rgba(200,168,0,.12);
+  padding:1px 5px;border-radius:3px;white-space:nowrap;}
+.miss-items{font-size:10px;color:#7a6400;}
+/* pv 헤더 링크 */
+.pv-store-link{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;
+  color:var(--pv);text-decoration:none;padding:2px 7px;border-radius:12px;
+  background:var(--pv-l);border:1px solid rgba(26,86,200,.2);transition:all .12s;white-space:nowrap;}
+.pv-store-link:hover{background:var(--pv);color:#fff;}
+/* ── 되돌리기 버튼 ── */
+.btn-undo{width:100%;padding:7px;border-radius:var(--r-sm);font-size:11.5px;font-weight:600;
+  cursor:pointer;border:1.5px solid var(--glass-border-subtle);font-family:inherit;
+  background:rgba(255,255,255,0.9);color:var(--t2);transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:5px;margin-top:-4px;}
+.btn-undo:hover{border-color:var(--red);color:var(--red);background:var(--red-l);}
+.btn-undo:active{transform:scale(0.98);}
+.btn-undo:disabled{opacity:.35;cursor:not-allowed;}
+.result.undo{background:rgba(148,103,189,0.08);border-color:#7c5cbf;color:#5a3a9a;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-thumb{background:var(--t4);border-radius:2px}
+
+/* ── 페이지 라우팅 ── */
+.page{display:none}.page.active{display:block;animation:fadeIn .18s ease}
+/* ── 사이드바 구분선 ── */
+.sb-divider{height:1px;background:var(--glass-border-subtle);margin:6px 14px;}
+/* ── 뷰 메뉴 컬러 ── */
+.sb-item.vfc.active,.sb-item.vfc:hover{background:var(--fc-l);color:var(--fc)}
+.sb-item.vpv.active,.sb-item.vpv:hover{background:var(--pv-l);color:var(--pv)}
+.sb-item.vmx.active,.sb-item.vmx:hover{background:var(--mx-l);color:var(--mx)}
+.sb-item.vac.active,.sb-item.vac:hover{background:var(--ac-l);color:var(--ac)}
+/* ── 필터 pill ── */
+.fp{padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--glass-border-subtle);background:var(--glass-bg-strong);
+  color:var(--t2);transition:all .1s;user-select:none;white-space:nowrap;font-family:inherit}
+.fp:hover{border-color:var(--fc);color:var(--fc)}.fp.on{background:var(--fc);border-color:var(--fc);color:#fff}
+/* ── 검색 ── */
+.reg-search{background:var(--glass-bg-strong);border:1px solid var(--glass-border-subtle);
+  color:var(--tx);padding:5px 11px;border-radius:20px;font-size:11.5px;font-family:inherit;
+  outline:none;min-width:150px;flex:1;max-width:240px}
+.reg-search:focus{border-color:var(--fc)}
+/* ── 상품 탭 ── */
+.prod-tab{padding:5px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--glass-border-subtle);background:var(--glass-bg-strong);
+  color:var(--t2);font-family:inherit;transition:all .12s}
+.prod-tab:hover{border-color:var(--fc);color:var(--fc)}
+.prod-tab.on{background:var(--fc);border-color:var(--fc);color:#fff}
+/* ── 조회 테이블 ── */
+.reg-tbl-wrap{overflow:auto;border-radius:var(--r-lg);border:1px solid var(--glass-border-subtle);
+  background:var(--glass-bg-strong);box-shadow:var(--glass-shadow);max-height:460px}
+.reg-tbl{width:100%;border-collapse:collapse;font-size:11.5px;white-space:nowrap}
+.reg-tbl thead th{padding:6px 10px;text-align:left;font-weight:700;font-size:10px;
+  text-transform:uppercase;letter-spacing:.04em;color:var(--t3);
+  background:var(--glass-bg-strong);border-bottom:1px solid var(--glass-border-subtle);
+  position:sticky;top:0;z-index:1}
+.reg-tbl tbody tr{border-bottom:1px solid var(--glass-border-subtle);transition:background .08s}
+.reg-tbl tbody tr:last-child td{border-bottom:none}
+.reg-tbl tbody tr:hover{background:var(--fc-l)}
+.reg-tbl tbody td{padding:6px 10px;vertical-align:middle;cursor:pointer}
+.reg-tbl td.c{text-align:center}.reg-tbl td.r{text-align:right}
+.reg-empty{padding:24px;text-align:center;color:var(--t4);font-size:12px}
+.reg-cnt{font-size:11px;color:var(--t3);font-weight:600}
+.nick-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10.5px;
+  font-weight:800;background:var(--fc-m);color:var(--fc);letter-spacing:-.2px}
+/* ── 데이터 조회 ── */
+.vw-nav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.vw-nav-btn{width:28px;height:28px;border-radius:var(--r-sm);border:1px solid var(--glass-border-subtle);
+  background:var(--glass-bg-strong);color:var(--t2);font-size:14px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;transition:all .1s}
+.vw-nav-btn:hover{border-color:var(--fc);color:var(--fc)}
+.vw-label{font-size:14px;font-weight:800;color:var(--tx);letter-spacing:-.3px;min-width:150px;text-align:center}
+.vw-sub{font-size:11px;color:var(--t3)}
+.vw-thisweek{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--glass-border-subtle);background:var(--glass-bg-strong);
+  color:var(--t2);margin-left:auto;font-family:inherit;transition:all .1s}
+.vw-thisweek:hover{border-color:var(--fc);color:var(--fc)}
+.vw-sumrow{display:flex;gap:8px;margin-bottom:12px}
+.vw-sum{flex:1;background:var(--glass-bg-strong);border:1px solid var(--glass-border-subtle);
+  border-radius:var(--r-sm);padding:8px 12px}
+.vw-sum-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t3);margin-bottom:2px}
+.vw-sum-val{font-size:18px;font-weight:800;letter-spacing:-.4px}
+.vw-tbl-wrap{border-radius:var(--r-lg);border:1px solid var(--glass-border-subtle);overflow:auto;
+  background:var(--glass-bg-strong);box-shadow:var(--glass-shadow)}
+.vw-tbl{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+.vw-tbl thead th{padding:7px 10px;font-size:9.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.04em;color:var(--t3);background:var(--glass-bg-strong);
+  border-bottom:1px solid var(--glass-border-subtle);text-align:right;position:sticky;top:0}
+.vw-tbl thead th:first-child{text-align:center;width:34px}
+.vw-tbl thead th:nth-child(2){text-align:left;min-width:110px}
+.vw-tbl thead th.col-today{background:rgba(254,249,195,.8);color:var(--pv)}
+.vw-tbl thead th.col-wknd{color:var(--t4)}
+.vw-tbl tbody tr{border-bottom:1px solid var(--glass-border-subtle)}
+.vw-tbl tbody td{padding:7px 10px;text-align:right;font-variant-numeric:tabular-nums;vertical-align:middle}
+.vw-tbl tbody td:first-child{text-align:center;font-size:10.5px;font-weight:700;color:var(--t3)}
+.vw-tbl tbody td:nth-child(2){text-align:left}
+.vw-tbl td.col-wknd{background:var(--glass-bg-dark);color:var(--t4)}
+.vw-tbl td.col-val{font-weight:600;color:var(--tx)}
+.vw-tbl td.col-zero{color:var(--t4)}
+.vw-tbl td.col-miss{background:rgba(254,249,195,.6);text-align:center;cursor:pointer;font-size:14px}
+.vw-tbl td.col-miss:hover{background:rgba(254,240,50,.4)}
+.vw-tbl .tot-row td{font-weight:700;background:var(--glass-bg-dark);
+  border-top:1.5px solid var(--glass-border-subtle);font-size:11px}
+.vw-nick{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:800;margin-right:5px}
+.vw-nick.fc{background:var(--fc-m);color:var(--fc)}
+.vw-nick.pv{background:var(--pv-m);color:var(--pv)}
+.vw-nick.mx{background:var(--mx-m);color:var(--mx)}
+.vw-nick.ac{background:var(--ac-m);color:var(--ac)}
+
 </style>
 </head>
 <body>
@@ -326,7 +468,7 @@ tbody tr:last-child td{border-bottom:none}
       <span>📋</span> 시트에서 수정
     </a>
     <span class="hb-sep"></span>
-    <div class="hb-dot"></div><span class="hb-st">연결됨</span>
+    <div class="hb-dot" style="background:var(--t4)"></div><span class="hb-st" style="color:var(--t3)">초기화 중...</span>
   </div>
 </div>
 
@@ -365,16 +507,55 @@ tbody tr:last-child td{border-bottom:none}
 
 <!-- ── SIDEBAR ── -->
 <aside class="sidebar">
-  <div class="sb-section">
-    <div class="sb-section-title">물량 업데이트</div>
-    <div class="sb-item active" onclick="sbClick(this,'upload')">
-      <span class="sb-item-ico">📤</span>
-      <span class="sb-item-txt">데이터 업로드</span>
+  <div class="sb-top">
+    <div class="sb-section">
+      <div class="sb-section-title">물량 업데이트</div>
+      <div class="sb-item active" id="nav-upload" onclick="goPage('upload',this)">
+        <span class="sb-item-ico">📤</span><span class="sb-item-txt">데이터 업로드</span>
+      </div>
+      <div class="sb-item" id="nav-prod-up" onclick="goPage('prod-up',this)">
+        <span class="sb-item-ico">🛍️</span><span class="sb-item-txt">상품 업로드</span>
+      </div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-section-title">데이터 조회</div>
+      <div class="sb-item vfc" id="nav-vfc" onclick="goPage('vfc',this)">
+        <span class="sb-item-ico">📊</span><span class="sb-item-txt">예측물량 fc</span>
+      </div>
+      <div class="sb-item vpv" id="nav-vpv" onclick="goPage('vpv',this)">
+        <span class="sb-item-ico">📥</span><span class="sb-item-txt">전일결제 pv</span>
+      </div>
+      <div class="sb-item vmx" id="nav-vmx" onclick="goPage('vmx',this)">
+        <span class="sb-item-ico">📋</span><span class="sb-item-txt">출고최대 mx</span>
+      </div>
+      <div class="sb-item vac" id="nav-vac" onclick="goPage('vac',this)">
+        <span class="sb-item-ico">📦</span><span class="sb-item-txt">실제출고 ac</span>
+      </div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-section">
+      <div class="sb-section-title">상품 관리</div>
+      <div class="sb-item" id="nav-pview" onclick="goPage('pview',this)">
+        <span class="sb-item-ico">🔍</span><span class="sb-item-txt">상품 조회</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 업로드 로그 -->
+  <div class="sb-log">
+    <div class="sb-log-head">
+      <span class="sb-log-title">업로드 로그</span>
+      <button class="sb-log-clear" onclick="clearLog()" title="로그 지우기">✕ 지우기</button>
+    </div>
+    <div class="sb-log-list" id="sbLogList">
+      <div class="sb-log-empty" id="sbLogEmpty">아직 업로드 기록이 없어요</div>
     </div>
   </div>
 </aside>
 
-<div class="main"><div class="grid4">
+<div class="main">
+<div class="page active" id="page-upload"><div class="grid4">
 
   <!-- ── FC ── -->
   <div class="sec s-fc">
@@ -382,7 +563,7 @@ tbody tr:last-child td{border-bottom:none}
       <div class="sec-badge">fc</div>
       <div class="sec-info">
         <div class="sec-title">예측물량</div>
-        <div class="sec-sub">매주 화요일 · 재업 가능 → fc_예측 시트</div>
+        <div class="sec-sub">매주 화요일 · 재업 가능 → Firestore shipment (fc)</div>
         <div class="sec-sub">파일명 : 네이버_브랜드스토어_올리브_예상물량_*.xlsx</div>
       </div>
       <div class="date-chip" id="fcChip" onclick="chipClick('fc')">
@@ -391,6 +572,7 @@ tbody tr:last-child td{border-bottom:none}
       </div>
     </div>
     <div class="sec-body">
+      <div class="missing-box loading" id="fcMissing">⏳ Firestore 확인 중...</div>
       <div class="dz-wrap" id="fcWrap">
         <button class="dz-clear" onclick="clearFile('fc')" title="파일 제거">✕</button>
         <div class="dropzone" id="fcDrop" onclick="document.getElementById('fcFile').click()"
@@ -405,7 +587,8 @@ tbody tr:last-child td{border-bottom:none}
         <div class="sum-row" id="fcSum"></div>
         <div class="tbl-wrap"><table><thead id="fcThead"></thead><tbody id="fcTbody"></tbody></table></div>
       </div>
-      <button class="btn-up" id="fcBtn" onclick="uploadFc()" disabled>fc_예측 시트에 업로드</button>
+      <button class="btn-up" id="fcBtn" onclick="uploadFc()" disabled>Firestore에 업로드</button>
+      <button class="btn-undo" id="fcUndoBtn" onclick="undoUpload('fc')" style="display:none">↩ 되돌리기</button>
       <div id="fcResult"></div>
     </div>
   </div>
@@ -415,8 +598,10 @@ tbody tr:last-child td{border-bottom:none}
     <div class="sec-head">
       <div class="sec-badge">pv</div>
       <div class="sec-info">
-        <div class="sec-title">전일결제</div>
-        <div class="sec-sub">매일 오전 · 상품성과 엑셀 → pv_전일결제 시트</div>
+        <div class="sec-title" style="display:flex;align-items:center;gap:7px;">전일결제
+          <a href="https://sell.smartstore.naver.com/#/bizadvisor/sales/product" target="_blank" class="pv-store-link">📊 스마트스토어 바로가기 ↗</a>
+        </div>
+        <div class="sec-sub">매일 오전 · 상품성과 엑셀 → Firestore shipment (pv)</div>
         <div class="sec-sub">파일명 : 상품성과_2026-03-13_2026-03-26.xlsx</div>
       </div>
       <div class="date-chip" id="pvChip" onclick="chipClick('pv')">
@@ -425,6 +610,7 @@ tbody tr:last-child td{border-bottom:none}
       </div>
     </div>
     <div class="sec-body">
+      <div class="missing-box loading" id="pvMissing">⏳ Firestore 확인 중...</div>
       <div class="auto-tag" id="pvAutoTag">📁 파일에서 날짜 자동 감지됨</div>
       <input type="hidden" id="pvDate">
       <div class="dz-wrap" id="pvWrap">
@@ -442,7 +628,8 @@ tbody tr:last-child td{border-bottom:none}
         <div class="tbl-wrap"><table><thead><tr><th>태그</th><th>품목</th><th class="r">수량</th></tr></thead><tbody id="pvTbody"></tbody></table></div>
         <div class="warn-box" id="pvWarn"></div>
       </div>
-      <button class="btn-up" id="pvBtn" onclick="uploadData('pv')" disabled>pv_전일결제 시트에 업로드</button>
+      <button class="btn-up" id="pvBtn" onclick="uploadData('pv')" disabled>Firestore에 업로드</button>
+      <button class="btn-undo" id="pvUndoBtn" onclick="undoUpload('pv')" style="display:none">↩ 되돌리기</button>
       <div id="pvResult"></div>
     </div>
   </div>
@@ -453,7 +640,7 @@ tbody tr:last-child td{border-bottom:none}
       <div class="sec-badge">mx</div>
       <div class="sec-info">
         <div class="sec-title">출고최대</div>
-        <div class="sec-sub">매일 오전 · 선택주문(발주 전) → mx_출고최대 시트</div>
+        <div class="sec-sub">매일 오전 · 선택주문(발주 전) → Firestore shipment (mx)</div>
         <div class="sec-sub">파일명 : 스마트스토어_선택주문발주발송관리_*.xlsx</div>
       </div>
       <div class="date-chip" id="mxChip" onclick="chipClick('mx')">
@@ -462,6 +649,7 @@ tbody tr:last-child td{border-bottom:none}
       </div>
     </div>
     <div class="sec-body">
+      <div class="missing-box loading" id="mxMissing">⏳ Firestore 확인 중...</div>
       <div class="auto-tag" id="mxAutoTag">📁 파일에서 날짜 자동 감지됨</div>
       <input type="hidden" id="mxDate">
       <div class="dz-wrap" id="mxWrap">
@@ -479,7 +667,8 @@ tbody tr:last-child td{border-bottom:none}
         <div class="tbl-wrap"><table><thead><tr><th>태그</th><th>품목</th><th class="r">수량</th></tr></thead><tbody id="mxTbody"></tbody></table></div>
         <div class="warn-box" id="mxWarn"></div>
       </div>
-      <button class="btn-up" id="mxBtn" onclick="uploadData('mx')" disabled>mx_출고최대 시트에 업로드</button>
+      <button class="btn-up" id="mxBtn" onclick="uploadData('mx')" disabled>Firestore에 업로드</button>
+      <button class="btn-undo" id="mxUndoBtn" onclick="undoUpload('mx')" style="display:none">↩ 되돌리기</button>
       <div id="mxResult"></div>
     </div>
   </div>
@@ -490,7 +679,7 @@ tbody tr:last-child td{border-bottom:none}
       <div class="sec-badge">ac</div>
       <div class="sec-info">
         <div class="sec-title">실제출고</div>
-        <div class="sec-sub">매일 오후 · 전체주문(발주확인) → ac_실제출고 시트</div>
+        <div class="sec-sub">매일 오후 · 전체주문(발주확인) → Firestore shipment (ac)</div>
         <div class="sec-sub">파일명 : 스마트스토어_전체주문발주발송관리_*.xlsx</div>
       </div>
       <div class="date-chip" id="acChip" onclick="chipClick('ac')">
@@ -499,6 +688,7 @@ tbody tr:last-child td{border-bottom:none}
       </div>
     </div>
     <div class="sec-body">
+      <div class="missing-box loading" id="acMissing">⏳ Firestore 확인 중...</div>
       <div class="auto-tag" id="acAutoTag">📁 파일에서 날짜 자동 감지됨</div>
       <input type="hidden" id="acDate">
       <div class="dz-wrap" id="acWrap">
@@ -516,84 +706,254 @@ tbody tr:last-child td{border-bottom:none}
         <div class="tbl-wrap"><table><thead><tr><th>태그</th><th>품목</th><th class="r">수량</th></tr></thead><tbody id="acTbody"></tbody></table></div>
         <div class="warn-box" id="acWarn"></div>
       </div>
-      <button class="btn-up" id="acBtn" onclick="uploadData('ac')" disabled>ac_실제출고 시트에 업로드</button>
+      <button class="btn-up" id="acBtn" onclick="uploadData('ac')" disabled>Firestore에 업로드</button>
+      <button class="btn-undo" id="acUndoBtn" onclick="undoUpload('ac')" style="display:none">↩ 되돌리기</button>
       <div id="acResult"></div>
     </div>
   </div>
 
-</div></div><!-- /grid4 /main -->
+</div></div><!-- /grid4 -->
+</div><!-- /page-upload -->
+
+<!-- ═══════════════════ 상품 업로드 ═══════════════════ -->
+<div class="page" id="page-prod-up">
+  <div class="grid4">
+  <div class="sec s-fc">
+    <div class="sec-head">
+      <div class="sec-badge" style="background:var(--ac-m);color:var(--ac)">SKU</div>
+      <div class="sec-info">
+        <div class="sec-title">상품 업로드</div>
+        <div class="sec-sub">items(품목) + skus(SKU) 동시 등록 · 상품_업로드_YYMMDD.xlsx</div>
+        <div class="sec-sub">파일명 : 상품_업로드_*.xlsx</div>
+      </div>
+    </div>
+    <div class="sec-body">
+      <div class="dz-wrap" id="productWrap">
+        <button class="dz-clear" onclick="clearFile('product')" title="파일 제거">✕</button>
+        <div class="dropzone" id="productDrop" onclick="document.getElementById('productFile').click()"
+          ondragover="dzOver(event,'productDrop')" ondragleave="dzLeave('productDrop')"
+          ondrop="dzDrop(event,'productDrop',parseProductFile)">
+          <input type="file" id="productFile" accept=".xlsx" style="display:none"
+            onchange="fileChange(event,parseProductFile)">
+          <div class="dz-ico" id="productIco">🛍️</div>
+          <div class="dz-main" id="productMain">상품 엑셀 드래그 또는 클릭</div>
+          <div class="dz-sub" id="productSub">상품_업로드_YYMMDD_vN.xlsx</div>
+        </div>
+      </div>
+      <div class="preview-wrap" id="productPreview" style="display:none">
+        <div class="sum-row" id="productSum"></div>
+      </div>
+      <button class="btn-up" id="productBtn" onclick="uploadProductFile()" disabled>Firestore에 업로드</button>
+      <div id="productResult"></div>
+    </div>
+  </div>
+  </div>
+</div><!-- /page-prod-up -->
+
+<!-- ═══════════════════ 데이터 조회 ═══════════════════ -->
+<div class="page" id="page-vfc">
+  <div class="sec">
+    <div class="sec-head"><div class="sec-info"><div class="sec-title">📊 예측물량 fc</div></div></div>
+    <div class="sec-body">
+      <div class="vw-nav">
+        <button class="vw-nav-btn" onclick="vwNav('fc',-1)">‹</button>
+        <div class="vw-label" id="vfc-label">—</div>
+        <button class="vw-nav-btn" onclick="vwNav('fc',1)">›</button>
+        <div class="vw-sub" id="vfc-sub"></div>
+        <button class="vw-thisweek" onclick="vwThisWeek('fc')">이번주</button>
+      </div>
+      <div class="vw-sumrow"><div class="vw-sum"><div class="vw-sum-lbl">주합계</div>
+        <div class="vw-sum-val fc" id="vfc-total">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">기입셀</div>
+        <div class="vw-sum-val" id="vfc-ok" style="color:var(--t2)">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">미기입</div>
+        <div class="vw-sum-val" id="vfc-miss" style="color:var(--red)">—</div></div></div>
+      <div class="vw-tbl-wrap"><table class="vw-tbl">
+        <thead><tr id="vfc-thead"></tr></thead>
+        <tbody id="vfc-tbody"><tr><td colspan="9" style="padding:30px;text-align:center;color:var(--t4)">⏳ 로딩 중...</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+</div><!-- /page-vfc -->
+
+<div class="page" id="page-vpv">
+  <div class="sec">
+    <div class="sec-head"><div class="sec-info"><div class="sec-title">📥 전일결제 pv</div></div></div>
+    <div class="sec-body">
+      <div class="vw-nav">
+        <button class="vw-nav-btn" onclick="vwNav('pv',-1)">‹</button>
+        <div class="vw-label" id="vpv-label">—</div>
+        <button class="vw-nav-btn" onclick="vwNav('pv',1)">›</button>
+        <div class="vw-sub" id="vpv-sub"></div>
+        <button class="vw-thisweek" onclick="vwThisWeek('pv')">이번주</button>
+      </div>
+      <div class="vw-sumrow"><div class="vw-sum"><div class="vw-sum-lbl">주합계</div>
+        <div class="vw-sum-val pv" id="vpv-total">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">기입셀</div>
+        <div class="vw-sum-val" id="vpv-ok" style="color:var(--t2)">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">미기입</div>
+        <div class="vw-sum-val" id="vpv-miss" style="color:var(--red)">—</div></div></div>
+      <div class="vw-tbl-wrap"><table class="vw-tbl">
+        <thead><tr id="vpv-thead"></tr></thead>
+        <tbody id="vpv-tbody"><tr><td colspan="9" style="padding:30px;text-align:center;color:var(--t4)">⏳ 로딩 중...</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+</div><!-- /page-vpv -->
+
+<div class="page" id="page-vmx">
+  <div class="sec">
+    <div class="sec-head"><div class="sec-info"><div class="sec-title">📋 출고최대 mx</div></div></div>
+    <div class="sec-body">
+      <div class="vw-nav">
+        <button class="vw-nav-btn" onclick="vwNav('mx',-1)">‹</button>
+        <div class="vw-label" id="vmx-label">—</div>
+        <button class="vw-nav-btn" onclick="vwNav('mx',1)">›</button>
+        <div class="vw-sub" id="vmx-sub"></div>
+        <button class="vw-thisweek" onclick="vwThisWeek('mx')">이번주</button>
+      </div>
+      <div class="vw-sumrow"><div class="vw-sum"><div class="vw-sum-lbl">주합계</div>
+        <div class="vw-sum-val mx" id="vmx-total">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">기입셀</div>
+        <div class="vw-sum-val" id="vmx-ok" style="color:var(--t2)">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">미기입</div>
+        <div class="vw-sum-val" id="vmx-miss" style="color:var(--red)">—</div></div></div>
+      <div class="vw-tbl-wrap"><table class="vw-tbl">
+        <thead><tr id="vmx-thead"></tr></thead>
+        <tbody id="vmx-tbody"><tr><td colspan="9" style="padding:30px;text-align:center;color:var(--t4)">⏳ 로딩 중...</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+</div><!-- /page-vmx -->
+
+<div class="page" id="page-vac">
+  <div class="sec">
+    <div class="sec-head"><div class="sec-info"><div class="sec-title">📦 실제출고 ac</div></div></div>
+    <div class="sec-body">
+      <div class="vw-nav">
+        <button class="vw-nav-btn" onclick="vwNav('ac',-1)">‹</button>
+        <div class="vw-label" id="vac-label">—</div>
+        <button class="vw-nav-btn" onclick="vwNav('ac',1)">›</button>
+        <div class="vw-sub" id="vac-sub"></div>
+        <button class="vw-thisweek" onclick="vwThisWeek('ac')">이번주</button>
+      </div>
+      <div class="vw-sumrow"><div class="vw-sum"><div class="vw-sum-lbl">주합계</div>
+        <div class="vw-sum-val ac" id="vac-total">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">기입셀</div>
+        <div class="vw-sum-val" id="vac-ok" style="color:var(--t2)">—</div></div>
+        <div class="vw-sum"><div class="vw-sum-lbl">미기입</div>
+        <div class="vw-sum-val" id="vac-miss" style="color:var(--red)">—</div></div></div>
+      <div class="vw-tbl-wrap"><table class="vw-tbl">
+        <thead><tr id="vac-thead"></tr></thead>
+        <tbody id="vac-tbody"><tr><td colspan="9" style="padding:30px;text-align:center;color:var(--t4)">⏳ 로딩 중...</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+</div><!-- /page-vac -->
+
+<!-- ═══════════════════ 상품 조회 ═══════════════════ -->
+<div class="page" id="page-pview">
+  <div class="sec">
+    <div class="sec-head"><div class="sec-info"><div class="sec-title">🔍 상품 조회</div></div></div>
+    <div class="sec-body">
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="prod-tab on" id="ptab-sku" onclick="setProdTab('sku')">🎁 SKU</button>
+        <button class="prod-tab" id="ptab-item" onclick="setProdTab('item')">🫙 품목</button>
+      </div>
+
+      <!-- SKU 탭 -->
+      <div id="pview-sku">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <span class="reg-cnt" id="pv-sku-cnt">로딩 중...</span>
+          <input class="reg-search" id="pv-sku-search" placeholder="닉네임·코드·상품명 검색" oninput="renderSkuList()">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">
+          <span style="font-size:9.5px;font-weight:700;color:var(--t3);min-width:28px">상태</span>
+          <button class="fp on" id="ss-all" onclick="setSF('status','all',this,'ss-')">전체</button>
+          <button class="fp" id="ss-상시" onclick="setSF('status','상시',this,'ss-')">상시</button>
+          <button class="fp" id="ss-단종예정" onclick="setSF('status','단종예정',this,'ss-')">단종예정</button>
+          <button class="fp" id="ss-런칭예정" onclick="setSF('status','런칭예정',this,'ss-')">런칭예정</button>
+          <button class="fp" id="ss-단종" onclick="setSF('status','단종',this,'ss-')">단종</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">
+          <span style="font-size:9.5px;font-weight:700;color:var(--t3);min-width:28px">유형</span>
+          <button class="fp on" id="st-all" onclick="setSF('type','all',this,'st-')">전체</button>
+          <button class="fp" id="st-상시운영" onclick="setSF('type','상시운영',this,'st-')">상시운영</button>
+          <button class="fp" id="st-슈퍼적립" onclick="setSF('type','슈퍼적립',this,'st-')">슈퍼적립</button>
+          <button class="fp" id="st-행사운영" onclick="setSF('type','행사운영',this,'st-')">행사운영</button>
+          <button class="fp" id="st-행사제안불가" onclick="setSF('type','행사제안불가',this,'st-')">행사제안불가</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+          <span style="font-size:9.5px;font-weight:700;color:var(--t3);min-width:28px">정렬</span>
+          <button class="fp on" id="so-no" onclick="setSF('sort','no',this,'so-')">No순</button>
+          <button class="fp" id="so-type" onclick="setSF('sort','type',this,'so-')">유형순</button>
+          <button class="fp" id="so-status" onclick="setSF('sort','status',this,'so-')">상태순</button>
+          <button class="fp" id="so-new" onclick="setSF('sort','new',this,'so-')">최신순</button>
+          <button class="fp" id="so-old" onclick="setSF('sort','old',this,'so-')">오래된순</button>
+        </div>
+        <div class="reg-tbl-wrap">
+          <table class="reg-tbl"><thead><tr id="sku-thead"></tr></thead>
+          <tbody id="sku-tbody"><tr><td colspan="10" class="reg-empty">⏳ 로딩 중...</td></tr></tbody></table>
+        </div>
+      </div>
+
+      <!-- 품목 탭 -->
+      <div id="pview-item" style="display:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <span class="reg-cnt" id="pv-item-cnt">로딩 중...</span>
+          <input class="reg-search" id="pv-item-search" placeholder="닉네임·코드·상품명 검색" oninput="renderItemList2()">
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">
+          <span style="font-size:9.5px;font-weight:700;color:var(--t3);min-width:28px">상태</span>
+          <button class="fp on" id="is-all" onclick="setSF('istatus','all',this,'is-')">전체</button>
+          <button class="fp" id="is-상시" onclick="setSF('istatus','상시',this,'is-')">상시</button>
+          <button class="fp" id="is-단종예정" onclick="setSF('istatus','단종예정',this,'is-')">단종예정</button>
+          <button class="fp" id="is-런칭예정" onclick="setSF('istatus','런칭예정',this,'is-')">런칭예정</button>
+          <button class="fp" id="is-단종" onclick="setSF('istatus','단종',this,'is-')">단종</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap">
+          <span style="font-size:9.5px;font-weight:700;color:var(--t3);min-width:28px">분류</span>
+          <button class="fp on" id="ic-all" onclick="setSF('icat','all',this,'ic-')">전체</button>
+          <button class="fp" id="ic-요거트" onclick="setSF('icat','그릭요거트 본품',this,'ic-')">요거트</button>
+          <button class="fp" id="ic-마시는" onclick="setSF('icat','마시는 그릭요거트',this,'ic-')">마시는</button>
+          <button class="fp" id="ic-토핑" onclick="setSF('icat','토핑',this,'ic-')">토핑</button>
+          <button class="fp" id="ic-굿즈" onclick="setSF('icat','굿즈/기타',this,'ic-')">굿즈</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+          <span style="font-size:9.5px;font-weight:700;color:var(--t3);min-width:28px">정렬</span>
+          <button class="fp on" id="io-no" onclick="setSF('isort','no',this,'io-')">No순</button>
+          <button class="fp" id="io-status" onclick="setSF('isort','status',this,'io-')">상태순</button>
+          <button class="fp" id="io-new" onclick="setSF('isort','new',this,'io-')">최신순</button>
+          <button class="fp" id="io-old" onclick="setSF('isort','old',this,'io-')">오래된순</button>
+        </div>
+        <div class="reg-tbl-wrap">
+          <table class="reg-tbl"><thead><tr id="item-thead"></tr></thead>
+          <tbody id="item-tbody"><tr><td colspan="8" class="reg-empty">⏳ 로딩 중...</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-pview -->
+
 </div><!-- /app-layout -->
 
 <script>
-// ── 다음달 업데이트 ───────────────────────────────────────────────────
-async function prepareNextMonth(){
-  const btn=document.getElementById('nextMonthBtn');
-  const txtEl=document.getElementById('nextMonthTxt');
-  const icoEl=document.getElementById('nextMonthIco');
-  const progEl=document.getElementById('nextMonthProg');
-
-  // 다음달 영업일 계산
+// ── 다음달 업데이트 (Firestore — schemaless, 사전 준비 불필요) ─────────
+function prepareNextMonth(){
   const now=new Date();
-  const nextMonth=now.getMonth()+2; // 1-based 다음달
-  const nextYear=nextMonth>12?now.getFullYear()+1:now.getFullYear();
-  const nm=nextMonth>12?1:nextMonth;
-  const nmLabel=`${nextYear}년 ${nm}월`;
-
-  // 다음달 영업일 날짜 목록 생성
-  const dates=[];
-  const daysInMonth=new Date(nextYear,nm,0).getDate();
-  for(let d=1;d<=daysInMonth;d++){
-    const dt=new Date(nextYear,nm-1,d);
-    const dow=dt.getDay();
-    if(dow!==0&&dow!==6){ // 주말 제외
-      dates.push(`${nextYear}-${String(nm).padStart(2,'0')}-${String(d).padStart(2,'0')}`);
-    }
-  }
-
-  const types=['fc','pv','mx','ac'];
-  btn.disabled=true;
-  icoEl.textContent='⏳';
-
-  let done=0;
-  const total=types.length;
-
-  for(const type of types){
-    txtEl.textContent=`${type} 처리 중...`;
-    progEl.textContent=`${done}/${total}`;
-
-    // 각 시트에 날짜별 qty=0 rows 전송 (컬럼 생성 트리거)
-    // qty=0이면 Apps Script에서 컬럼만 생성하고 값은 건드리지 않도록
-    // → 별도 action: "prepareMonth" 사용
-    try{
-      const rows=dates.map(date=>({code:'Y-P-00',date,qty:null,prepareOnly:true}));
-      const res=await fetch(SCRIPT_URL,{
-        method:'POST',
-        headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({type,action:'prepareMonth',dates,month:nmLabel})
-      });
-      const json=await res.json();
-      done++;
-      progEl.textContent=`${done}/${total}`;
-      if(!json.ok) throw new Error(json.error);
-    }catch(err){
-      icoEl.textContent='❌';
-      txtEl.textContent='오류 발생';
-      progEl.textContent=err.message.slice(0,20);
-      setTimeout(()=>{
-        btn.disabled=false;icoEl.textContent='📅';
-        txtEl.textContent='다음달 업데이트';progEl.textContent='';
-      },3000);
-      return;
-    }
-  }
-
+  const nm=(now.getMonth()+2)>12?1:(now.getMonth()+2);
+  const ny=(now.getMonth()+2)>12?now.getFullYear()+1:now.getFullYear();
+  const nmLabel=`${ny}년 ${nm}월`;
+  const daysInMonth=new Date(ny,nm,0).getDate();
+  let bizCount=0;
+  for(let d=1;d<=daysInMonth;d++){const dw=new Date(ny,nm-1,d).getDay();if(dw!==0&&dw!==6)bizCount++;}
+  const icoEl=document.getElementById('nextMonthIco');
+  const txtEl=document.getElementById('nextMonthTxt');
+  const progEl=document.getElementById('nextMonthProg');
   icoEl.textContent='✅';
-  txtEl.textContent=`${nmLabel} 완료`;
-  progEl.textContent=`영업일 ${dates.length}일`;
-  setTimeout(()=>{
-    btn.disabled=false;icoEl.textContent='📅';
-    txtEl.textContent='다음달 업데이트';progEl.textContent='';
-  },4000);
+  txtEl.textContent=`${nmLabel} 준비됨`;
+  progEl.textContent=`영업일 ${bizCount}일 · Firestore는 사전 준비 불필요`;
+  setTimeout(()=>{icoEl.textContent='📅';txtEl.textContent='다음달 업데이트';progEl.textContent='';},3500);
 }
 
 // ── 사이드바 ─────────────────────────────────────────────────────────
@@ -606,13 +966,8 @@ function sbClick(el,target){
   }
 }
 
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzJ5PcJZetp7Pqb90YJdBW8Ofb745jikTtd0DaufAIwsK7nhXbilvsuwEG1cq4x6tsEew/exec";
-const SHEET_ID="1Y5xDhV_6UcdNOtivYdkOO6bduYgdkNmB6_w4zfPXXQM";
-const GID={
-  fc:'841166294', pv:'1242586257', mx:'1642458068', ac:'30994408',
-  unship:'113580769', 품목기준표:'1280336969', sku기준표:'1480827801',
-  행사정보:'611987186', 행사SID목록:'598629104', 연동로그:'688904014'
-};
+// SCRIPT_URL / GID 제거됨 — Firebase Firestore로 교체됨
+// Sheets 링크는 HTML href에 하드코딩 유지
 
 // ── 유틸 ─────────────────────────────────────────────────────────────
 const DOW_KO=['일','월','화','수','목','금','토'];
@@ -983,7 +1338,7 @@ function dzDrop(e,id,fn){e.preventDefault();dzLeave(id);const f=e.dataTransfer?.
 function fileChange(e,fn){const f=e.target.files?.[0];if(f)fn(f);}
 
 // ── 공통 데이터 ───────────────────────────────────────────────────────
-const PRODUCTS=[{code:'Y-P-00',tag:'플',name:'플레인 100g',grp:'요거트',key:'플'},{code:'Y-S-00',tag:'소',name:'소프트 100g',grp:'요거트',key:'소'},{code:'Y-V-A0',tag:'알',name:'알룰로스 100g',grp:'요거트',key:'알'},{code:'Y-V-M0',tag:'말',name:'말차 100g',grp:'요거트',key:'말'},{code:'Y-V-L0',tag:'라',name:'카페라떼 100g',grp:'요거트',key:'라'},{code:'Y-P-BR',tag:'블',name:'블루베리 130g',grp:'요거트',key:'블'},{code:'Y-P-AP',tag:'애',name:'애플시나몬 130g',grp:'요거트',key:'애'},{code:'Y-P-OG',tag:'오',name:'오그래놀라 115g',grp:'요거트',key:'오'},{code:'Y-S-CR',tag:'크',name:'크리스피 120g',grp:'요거트',key:'크'},{code:'Y-P-KK',tag:'카',name:'카카오 120g',grp:'요거트',key:'카'},{code:'Y-P-PR',tag:'푸',name:'푸룬 130g',grp:'요거트',key:'푸'},{code:'Y-S-CC',tag:'초',name:'초코소보로 120g',grp:'요거트',key:'초'},{code:'D-P-S0',tag:'마S',name:'마시는 750ml',grp:'마시는',key:'마S'},{code:'D-P-L0',tag:'마L',name:'마시는 1.8L',grp:'마시는',key:'마L'},{code:'T-3-BR',tag:'블토',name:'블루베리토핑',grp:'토핑',key:'블토'},{code:'T-3-CR',tag:'크토',name:'크리스피토핑',grp:'토핑',key:'크토'},{code:'T-3-CC',tag:'초토',name:'초코소보로토핑',grp:'토핑',key:'초토'},{code:'T-1-HS',tag:'꿀',name:'허니스틱',grp:'토핑',key:'꿀'},{code:'G-1-FI',tag:'줄자',name:'피팅줄자',grp:'굿즈',key:'줄자'},{code:'G-1-IC',tag:'파우치',name:'아이스파우치',grp:'굿즈',key:'파우치'},{code:'G-1-MA',tag:'메이커',name:'메이커',grp:'굿즈',key:'메이커'},{code:'T-3-ST',tag:'딸토',name:'딸기토핑',grp:'토핑',key:'딸토'},{code:'T-3-KK',tag:'카토',name:'카카오토핑',grp:'토핑',key:'카토'}];
+// PRODUCTS는 하단에서 재정의
 const CATALOG={'4311342462':{플:3},'7587580283':{소:3},'8513806283':{꿀:1},'12739207913':{푸:5},'13054097382':{메이커:1},'11186574097':{플:6,'블토':1},'11809718890':{플:8,블:1},'12835060307':{플:3,소:3},'12580366413':{라:5,플:1},'11438362925':{애:4,알:1},'11470622749':{알:5,플:1},'12409281824':{오:3,플:3},'12794215123':{푸:3,플:3},'7587925609':{블:5,소:1},'12580546874':{말:5,'초토':1},'12541261594':{말:3,플:3,'초토':1},'11838572943':{카:4,플:4},'10301450854':{소:10,꿀:1},'11943980667':{소:8,줄자:1},'13049349800':{'마S':1,꿀:1},'13049647929':{'마S':2,메이커:1},'13049680413':{'마S':2,'블토':2,'크토':2,'초토':2},'12569125692':{말:1,라:1,알:1,플:1,소:1,블:1,애:1,푸:1,오:1,카:1,크:1},'10273725144':{플:1,소:1,알:1,블:1,애:1,오:1,크:1,카:1},'12448492587':{플:3,소:3,'개별토핑':2},'10994518732':{'개별토핑':1},'13057158166':{'마L':2,'개별토핑':2},'12863905642':{'개별요거트':1}};
 const IGNORE_KW=['삼각롤러','박스-선물용','박스','선물용'];
 const KW_PRIORITY=[['블루베리콩포트','블토'],['블루토핑','블토'],['블루 토핑','블토'],['크리스피그래놀라','크토'],['크리토핑','크토'],['크리 토핑','크토'],['초코소보로그래놀라','초토'],['초코토핑','초토'],['초코 토핑','초토'],['딸기콩포트','딸토'],['딸기토핑','딸토'],['카카오그래놀라','카토'],['카카오토핑','카토'],['마시는','__마시는__'],['허니스틱','__꿀__'],['꿀스틱','__꿀__'],['피팅줄자','줄자'],['줄자','줄자'],['아이스파우치','파우치'],['메이커','메이커'],['크리스피','크'],['초코소보로','초'],['카페라떼','라'],['알룰로스','알'],['말차','말'],['오!그래','오'],['오그래','오'],['카카오','카'],['푸룬','푸'],['애플','애'],['블루베리','블'],['소프트','소'],['플레인','플']];
@@ -1086,34 +1441,63 @@ function parseFc(file){
   const reader=new FileReader();
   reader.onload=ev=>{
     try{
-      const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
+      // cellDates:false: 날짜를 숫자 serial로 읽어 타임존 오차 제거
+      const wb=XLSX.read(ev.target.result,{type:'array',cellDates:false});
       const sn=wb.SheetNames.find(n=>n.includes('물량예측'))||wb.SheetNames[0];
-      // raw:true 로 Date 객체 그대로 읽기
       const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null,raw:true});
 
-      // Row18 (idx 17): 날짜 헤더
+      // Row18 (idx 17): 날짜 헤더 행
       const dateRow=raw[17]||[];
+      const curYear=new Date().getFullYear();
+
+      // serial → "YYYY-MM-DD" (UTC 고정, 타임존 무관)
+      function serialToIso(serial){
+        if(!serial||typeof serial!=='number'||serial<40000) return null;
+        // Excel serial 1900.01.00 기준 (25569 = 1970.01.01 offset)
+        const ms=Math.round((serial-25569)*86400000);
+        const d=new Date(ms);
+        // UTC 기준으로 날짜 문자열 생성
+        const y=d.getUTCFullYear();
+        const m=String(d.getUTCMonth()+1).padStart(2,'0');
+        const dd=String(d.getUTCDate()).padStart(2,'0');
+        return `${y}-${m}-${dd}`;
+      }
+
       const dateCols=[];
       for(let c=0;c<dateRow.length;c++){
         const v=dateRow[c];
-        let dt=null;
-        if(v instanceof Date) dt=v;
-        else if(typeof v==='number'&&v>40000){
-          // Excel serial → JS Date (UTC 기준 보정)
-          dt=new Date(Math.round((v-25569)*86400*1000));
+        let iso=null;
+        if(typeof v==='number'&&v>40000){
+          iso=serialToIso(v);
+        } else if(v instanceof Date){
+          const y=v.getFullYear(),m=String(v.getMonth()+1).padStart(2,'0'),d=String(v.getDate()).padStart(2,'0');
+          iso=`${y}-${m}-${d}`;
+        } else if(typeof v==='string'){
+          const mt=v.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
+          if(mt) iso=`${mt[1]}-${mt[2].padStart(2,'0')}-${mt[3].padStart(2,'0')}`;
         }
-        else if(typeof v==='string'){
-          const m=v.match(/(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})/);
-          if(m) dt=new Date(`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}T00:00:00`);
-        }
-        if(!dt||isNaN(dt.getTime())) continue;
+        if(!iso) continue;
+        let yr=parseInt(iso.slice(0,4));
+        // 연도 보정: 현재 연도보다 1~3년 이전이면 +1년씩 올림
+        while(yr < curYear && (curYear - yr) <= 3){ yr++; }
+        iso=`${yr}${iso.slice(4)}`;
+        // 현재 연도 ± 2년 범위 벗어나면 스킵
+        if(Math.abs(yr - curYear) > 2) continue;
+        const dt=parseISO(iso);
         const dow=DOW_KO[dt.getDay()];
-        if(['월','화','수','목','금'].includes(dow))
-          dateCols.push({col:c, date:isoDate(dt), dow, dtObj:dt});
+        if(!['월','화','수','목','금'].includes(dow)) continue;
+        dateCols.push({col:c, date:iso, dow});
       }
       if(!dateCols.length) throw new Error('날짜 헤더를 찾을 수 없습니다 (Row18)');
 
-      // Row21~ (idx 20~): Col2(idx1)=품목명 → FC_NAME_MAP → product_code
+      // 중복 날짜 제거 (같은 날짜가 여러 열에 있으면 첫 번째만 사용)
+      const seenDates=new Set();
+      const uniqueDateCols=dateCols.filter(dc=>{
+        if(seenDates.has(dc.date)) return false;
+        seenDates.add(dc.date); return true;
+      });
+
+      // Row21~ (idx 20~): 품목명 → 코드 매핑
       const itemData=[];
       for(let r=20;r<Math.min(raw.length,60);r++){
         const row=raw[r];
@@ -1123,7 +1507,7 @@ function parseFc(file){
         const p=PRODUCTS.find(x=>x.code===code);
         if(!p) continue;
         const vals={};
-        dateCols.forEach(dc=>{
+        uniqueDateCols.forEach(dc=>{
           const v=row[dc.col];
           vals[dc.date]=v!=null&&v!==''&&!isNaN(Number(v))?parseInt(Number(v)):0;
         });
@@ -1131,34 +1515,42 @@ function parseFc(file){
       }
       if(!itemData.length) throw new Error('품목 데이터 없음 — Row21~, Col2 품목명 확인');
 
-      fcItemData=itemData; fcDateCols=dateCols;
+      fcItemData=itemData; fcDateCols=uniqueDateCols;
       fcAllRows=[];
       itemData.forEach(({code,vals})=>
         Object.entries(vals).forEach(([date,qty])=>{if(qty>0)fcAllRows.push({code,date,qty});}));
 
-      const allDates=dateCols.map(d=>d.date).sort();
+      const allDates=uniqueDateCols.map(d=>d.date).sort();
       dpState.fcAvailDates=allDates;
 
-      // 기본 선택: 다음주 화요일부터 7일(화~월)
+      // 기본 선택: 다음주 화요일 ~ 다다음주 월요일
       const mon=startOfWeek(new Date());
-      const nextTue=isoDate(addDays(mon,8));    // 다음주 화요일
-      const nextMon=isoDate(addDays(mon,14));   // 다다음주 월요일
+      const nextTue=isoDate(addDays(mon,8));
+      const nextMon=isoDate(addDays(mon,14));
       dpState.start=allDates.find(d=>d>=nextTue)||allDates[0];
-      dpState.end=allDates.filter(d=>d<=nextMon).slice(-1)[0]||allDates.slice(-1)[0];
+      const endCandidates=allDates.filter(d=>d<=nextMon);
+      dpState.end=endCandidates.length?endCandidates[endCandidates.length-1]:allDates[allDates.length-1];
       const s=parseISO(dpState.start);
       dpState.month0=new Date(s.getFullYear(),s.getMonth(),1);
 
       document.getElementById('fcDrop').classList.add('has-file');
+      document.getElementById('fcWrap').classList.add('has-file');
       document.getElementById('fcIco').textContent='✅';
       document.getElementById('fcMain').textContent=file.name;
-      document.getElementById('fcSub').textContent=`${allDates.length}일 데이터 · 헤더 칩 클릭으로 기간 조정`;
+      fileState.fc=true;
+      const dateRangeStr=allDates[0].slice(5)+' ~ '+allDates[allDates.length-1].slice(5);
+      document.getElementById('fcSub').textContent=`${allDates.length}일 (${dateRangeStr}) · 헤더 칩으로 기간 조정`;
 
       const biz=bizDays(dpState.start,dpState.end);
       setChip('fc',`${chipDate(dpState.start)} ~ ${chipDate(dpState.end)} · ${biz}일`,true);
 
       updateFcPreview();
       document.getElementById('fcBtn').disabled=false;
-    }catch(err){showResult('fcResult','err','파싱 오류: '+err.message);}
+      console.log('[FC] 파싱 완료 —',allDates.length,'일 |',dpState.start,'~',dpState.end);
+    }catch(err){
+      console.error('[FC] 파싱 실패:',err);
+      showResult('fcResult','err','파싱 오류: '+err.message);
+    }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1265,31 +1657,763 @@ function parseOrderFile(file,type){
 function parseMx(file){parseOrderFile(file,'mx');}
 function parseAc(file){parseOrderFile(file,'ac');}
 
-// ── 업로드 ────────────────────────────────────────────────────────────
+// ── 업로드 + 되돌리기 (Firebase Firestore) ────────────────────────────
+// 타입별 직전 스냅샷 저장 { docId: { 필드값 or null(없었음) } }
+const undoSnap = { fc: null, pv: null, mx: null, ac: null };
+
+// 업로드 전 기존값 읽기
+async function readSnap(rows, field) {
+  const snap = {};
+  await Promise.all(rows.map(async row => {
+    const docId = row.date + '_' + row.code;
+    try {
+      const d = await window.fsGetDoc(window.fsDoc(window.db, 'shipment', docId));
+      snap[docId] = d.exists() ? (d.data()[field] ?? null) : null;
+    } catch(e) { snap[docId] = null; }
+  }));
+  return snap;
+}
+
+// 되돌리기 실행
+async function undoUpload(type) {
+  const snap = undoSnap[type];
+  if (!snap) return;
+  const btn = document.getElementById(type + 'UndoBtn');
+  btn.disabled = true; btn.textContent = '↩ 되돌리는 중...';
+  const field = type; // fc/pv/mx/ac
+  try {
+    await Promise.all(Object.entries(snap).map(([docId, oldVal]) => {
+      if (oldVal === null) {
+        // 원래 없던 필드 → deleteField로 제거
+        return window.fsSetDoc(
+          window.fsDoc(window.db, 'shipment', docId),
+          { [field]: window.fsDeleteField(), updatedAt: new Date().toISOString() },
+          { merge: true }
+        );
+      } else {
+        // 원래 있던 값으로 복원
+        return window.fsSetDoc(
+          window.fsDoc(window.db, 'shipment', docId),
+          { [field]: oldVal, updatedAt: new Date().toISOString() },
+          { merge: true }
+        );
+      }
+    }));
+    const nullCount = Object.values(snap).filter(v => v === null).length;
+    const restoreCount = Object.values(snap).filter(v => v !== null).length;
+    let msg = '↩ 되돌리기 완료 —';
+    if (restoreCount) msg += ` 이전값 복원 ${restoreCount}개`;
+    if (nullCount)    msg += ` 새 데이터 삭제 ${nullCount}개`;
+    showResult(type + 'Result', 'undo', msg);
+    addLog(type,'undo','되돌리기 완료',`${restoreCount?`복원 ${restoreCount}개`:''}${nullCount?` 삭제 ${nullCount}개`:''}`);
+    undoSnap[type] = null;
+    document.getElementById(type + 'UndoBtn').style.display = 'none';
+  } catch(err) {
+    showResult(type + 'Result', 'err', '❌ 되돌리기 실패: ' + err.message);
+    addLog(type,'err','되돌리기 실패',err.message.slice(0,40));
+    btn.disabled = false; btn.textContent = '↩ 되돌리기';
+  }
+}
+
+// ── 미기입 체크 ──────────────────────────────────────────────────────
+async function checkAllMissing() {
+  for(const type of ['fc','pv','mx','ac']) {
+    checkMissing(type).catch(e=>console.warn('[missing]',type,e));
+  }
+}
+
+async function checkMissing(type) {
+  const el = document.getElementById(type + 'Missing');
+  if(!el || !window.db) return;
+
+  const todayDt = new Date();
+  const todayIso = isoDate(todayDt);
+  const dow = todayDt.getDay(); // 0=일,1=월,...,6=토
+
+  // 체크 대상 날짜 계산
+  // fc: 이번주 월~금
+  // pv: 이번주 월 ~ 어제 (영업일)
+  // mx: 이번주 월 ~ 오늘 (영업일)
+  // ac: 이번주 월 ~ 어제 (영업일)
+  const monDt = startOfWeek(todayDt);
+  const monIso = isoDate(monDt);
+
+  let checkDates = [];
+  const allBizThisWeek = [];
+  for(let i=0; i<5; i++) {
+    const d = addDays(monDt, i);
+    if(isoDate(d) <= todayIso) allBizThisWeek.push(isoDate(d));
+  }
+
+  if(type === 'fc') {
+    // 이번주 월~금 전체 (미래 포함)
+    for(let i=0; i<5; i++) checkDates.push(isoDate(addDays(monDt, i)));
+  } else if(type === 'pv') {
+    // 월 ~ 어제까지 영업일
+    checkDates = allBizThisWeek.filter(d => d < todayIso);
+  } else if(type === 'mx') {
+    // 월 ~ 오늘까지 영업일
+    checkDates = allBizThisWeek;
+  } else if(type === 'ac') {
+    // 월 ~ 어제까지 영업일
+    checkDates = allBizThisWeek.filter(d => d < todayIso);
+  }
+
+  if(!checkDates.length) {
+    el.className = 'missing-box ok';
+    el.innerHTML = '✅ 이번 주 기입 대상 없음';
+    return;
+  }
+
+  el.className = 'missing-box loading';
+  el.innerHTML = '⏳ Firestore 확인 중...';
+
+  try {
+    // Firestore 쿼리: 해당 날짜 범위의 shipment 문서 읽기
+    const q = window.fsQuery(
+      window.fsCollection(window.db, 'shipment'),
+      window.fsWhere('date', '>=', checkDates[0]),
+      window.fsWhere('date', '<=', checkDates[checkDates.length-1])
+    );
+    const snap = await window.fsGetDocs(q);
+    // mx/ac: 날짜 단위 체크 (한 품목이라도 업로드됐으면 기입 완료)
+    // fc/pv: 날짜 × 품목 단위 체크
+    const enteredDates = new Set();   // mx/ac용: 기입된 날짜
+    const existing = {};              // fc/pv용: date_code 단위
+    snap.forEach(d => {
+      const data = d.data();
+      const val = data[type];
+      if(val !== null && val !== undefined) {
+        existing[data.date + '_' + data.productCode] = val;
+        enteredDates.add(data.date);
+      }
+    });
+
+    // 누락 계산: 날짜에 하나라도 있으면 기입 완료
+    const missingByDate = {};
+    for(const date of checkDates) {
+      const hasAny = enteredDates.has(date);
+      if(!hasAny) missingByDate[date] = [];
+    }
+
+    if(!Object.keys(missingByDate).length) {
+      el.className = 'missing-box ok';
+      el.innerHTML = '✅ 이번 주 모두 기입됨';
+      return;
+    }
+
+    // 미기입 표시
+    el.className = 'missing-box warn';
+    const lines = Object.entries(missingByDate).map(([date]) => {
+      const d = parseISO(date);
+      const label = (date.slice(5)).replace('-','/') + ' (' + DOW_KO[d.getDay()] + ')';
+      return '<div class="miss-row"><span class="miss-date">' + label + '</span><span class="miss-items">미기입</span></div>';
+    }).join('');
+    el.innerHTML = '<div class="miss-title">⚠️ 미기입 날짜 · 품목</div>' + lines;
+
+  } catch(e) {
+    el.className = 'missing-box loading';
+    el.innerHTML = '⚠️ 확인 실패 — ' + e.message.slice(0,30);
+  }
+}
+
+function showUndo(type) {
+  const btn = document.getElementById(type + 'UndoBtn');
+  if (btn) { btn.style.display = 'flex'; btn.disabled = false; btn.textContent = '↩ 되돌리기'; }
+}
+
+// ── 업로드 로그 ──────────────────────────────────────────────────────
+const LOG_MAX = 30;
+const uploadLog = [];
+function addLog(type, status, action, detail) {
+  const now = new Date();
+  const hhmm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  uploadLog.unshift({ type, status, action, detail, time: hhmm });
+  if (uploadLog.length > LOG_MAX) uploadLog.pop();
+  renderLog();
+}
+function renderLog() {
+  const list = document.getElementById('sbLogList');
+  const empty = document.getElementById('sbLogEmpty');
+  if (!uploadLog.length) { if(empty) empty.style.display='block'; return; }
+  if(empty) empty.style.display='none';
+  const statusIcon = { ok:'✅', err:'❌', undo:'↩' };
+  const statusCls  = { ok:'ok', err:'err', undo:'undo' };
+  list.innerHTML = uploadLog.map(log => `
+    <div class="sb-log-item">
+      <div class="sb-log-row1">
+        <span class="sb-log-badge ${log.type}">${log.type.toUpperCase()}</span>
+        <span class="sb-log-action">${log.action}</span>
+        <span class="sb-log-status ${statusCls[log.status]}">${statusIcon[log.status]}</span>
+      </div>
+      <div class="sb-log-detail">${log.detail}</div>
+      <div class="sb-log-time">${log.time}</div>
+    </div>`).join('');
+}
+function clearLog() {
+  uploadLog.length = 0;
+  const empty = document.getElementById('sbLogEmpty');
+  if(empty) empty.style.display='block';
+  document.getElementById('sbLogList').innerHTML = '<div class="sb-log-empty" id="sbLogEmpty">아직 업로드 기록이 없어요</div>';
+}
+
 async function uploadFc(){
   if(!fcAllRows?.length)return;
   const s=dpState.start,e=dpState.end;
   if(!s||!e){alert('기간을 선택해주세요.');return;}
   const rows=fcAllRows.filter(r=>r.date>=s&&r.date<=e);
   if(!rows.length){alert('선택된 기간에 데이터가 없습니다.');return;}
+  if(!window.db||!window.fsSetDoc||!window.fsDoc){showResult('fcResult','err','❌ Firebase 미초기화 — 새로고침 후 재시도');return;}
   const btn=document.getElementById('fcBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 업로드 중...';showResult('fcResult','','');
-  try{const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({type:'fc',rows})});const json=await res.json();if(json.ok){let m=`✅ fc 완료 — ${json.updated}개 업데이트`;if(json.notFound?.length)m+=` · 미매핑 ${json.notFound.length}`;showResult('fcResult','ok',m);}else showResult('fcResult','err','❌ '+json.error);}catch(err){showResult('fcResult','err','❌ '+err.message);}
-  btn.disabled=false;btn.innerHTML='fc_예측 시트에 업로드';
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 저장 중...';showResult('fcResult','','');
+  document.getElementById('fcUndoBtn').style.display='none';
+  try{
+    undoSnap.fc = await readSnap(rows, 'fc');
+    await Promise.all(rows.map(row=>window.fsSetDoc(window.fsDoc(window.db,'shipment',row.date+'_'+row.code),{date:row.date,productCode:row.code,fc:row.qty,updatedAt:new Date().toISOString()},{merge:true})));
+    const overwrote = Object.values(undoSnap.fc).filter(v=>v!==null).length;
+    const created   = Object.values(undoSnap.fc).filter(v=>v===null).length;
+    let msg = `✅ fc 완료 — ${rows.length}개 저장 (${s} ~ ${e})`;
+    if(overwrote) msg += ` · 덮어쓰기 ${overwrote}개`;
+    if(created)   msg += ` · 신규 ${created}개`;
+    showResult('fcResult','ok',msg);
+    showUndo('fc');
+    addLog('fc','ok','업로드 완료',`${rows.length}개 · ${s} ~ ${e}${overwrote?` · 덮어쓰기 ${overwrote}개`:''}${created?` · 신규 ${created}개`:''}`);
+  }catch(err){
+    showResult('fcResult','err','❌ '+err.message);
+    addLog('fc','err','업로드 실패',err.message.slice(0,40));
+    undoSnap.fc=null;
+  }
+  btn.disabled=false;btn.innerHTML='Firestore에 업로드';
 }
-const SHEET_LABEL={pv:'pv_전일결제',mx:'mx_출고최대',ac:'ac_실제출고'};
+const FS_LABEL={pv:'전일결제',mx:'출고최대',ac:'실제출고'};
 async function uploadData(type){
   const tally={pv:pvTally,mx:mxTally,ac:acTally}[type];if(!tally)return;
+  if(!window.db||!window.fsSetDoc||!window.fsDoc){showResult(type+'Result','err','❌ Firebase 미초기화 — 새로고침 후 재시도');return;}
   const date=document.getElementById(type+'Date').value;
   if(!date){alert('날짜를 선택해주세요 (헤더 칩 클릭).');return;}
   const rows=[];PRODUCTS.forEach(p=>{const q=tally[p.key]||0;if(q>0)rows.push({code:p.code,date,qty:q});});
   if(!rows.length){alert('데이터 없음');return;}
   const btn=document.getElementById(type+'Btn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 업로드 중...';showResult(type+'Result','','');
-  try{const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({type,rows})});const json=await res.json();if(json.ok){let m=`✅ ${SHEET_LABEL[type]} 완료 — ${json.updated}개 (${date})`;if(json.notFound?.length)m+=` · 미매핑 ${json.notFound.slice(0,2).join(',')}`;showResult(type+'Result','ok',m);}else showResult(type+'Result','err','❌ '+json.error);}catch(err){showResult(type+'Result','err','❌ '+err.message);}
-  btn.disabled=false;btn.innerHTML=`${SHEET_LABEL[type]} 시트에 업로드`;
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 저장 중...';showResult(type+'Result','','');
+  document.getElementById(type+'UndoBtn').style.display='none';
+  try{
+    undoSnap[type] = await readSnap(rows, type);
+    await Promise.all(rows.map(row=>window.fsSetDoc(window.fsDoc(window.db,'shipment',row.date+'_'+row.code),{date:row.date,productCode:row.code,[type]:row.qty,updatedAt:new Date().toISOString()},{merge:true})));
+    const overwrote = Object.values(undoSnap[type]).filter(v=>v!==null).length;
+    const created   = Object.values(undoSnap[type]).filter(v=>v===null).length;
+    let msg = `✅ ${FS_LABEL[type]} 완료 — ${rows.length}개 저장 (${date})`;
+    if(overwrote) msg += ` · 덮어쓰기 ${overwrote}개`;
+    if(created)   msg += ` · 신규 ${created}개`;
+    showResult(type+'Result','ok',msg);
+    showUndo(type);
+    addLog(type,'ok','업로드 완료',`${rows.length}개 · ${date}${overwrote?` · 덮어쓰기 ${overwrote}개`:''}${created?` · 신규 ${created}개`:''}`);
+  }catch(err){
+    showResult(type+'Result','err','❌ '+err.message);
+    addLog(type,'err','업로드 실패',err.message.slice(0,40));
+    undoSnap[type]=null;
+  }
+  btn.disabled=false;btn.innerHTML='Firestore에 업로드';
 }
 function showResult(id,cls,msg){const el=document.getElementById(id);if(el)el.innerHTML=msg?`<div class="result ${cls}">${msg}</div>`:'';}
+
+
+// ════════════════════════════════════════════════════
+// 품목/SKU 마스터 데이터
+// ════════════════════════════════════════════════════
+const PRODUCTS=[
+  {no:1, code:'Y-P-00',tag:'플',  name:'플레인 그릭요거트 100g',      grp:'요거트'},
+  {no:2, code:'Y-S-00',tag:'소',  name:'소프트 그릭요거트 100g',      grp:'요거트'},
+  {no:3, code:'Y-V-A0',tag:'알',  name:'알룰로스 블렌드 100g',        grp:'요거트'},
+  {no:4, code:'Y-V-M0',tag:'말',  name:'말차 그릭요거트 100g',        grp:'요거트'},
+  {no:5, code:'Y-V-L0',tag:'라',  name:'카페라떼 그릭요거트 100g',    grp:'요거트'},
+  {no:6, code:'Y-P-BR',tag:'블',  name:'플레인 블루베리 130g',        grp:'요거트'},
+  {no:7, code:'Y-P-AP',tag:'애',  name:'플레인 애플시나몬 130g',      grp:'요거트'},
+  {no:8, code:'Y-P-OG',tag:'오',  name:'오!그래놀라 저당 그릭요거트 115g',grp:'요거트'},
+  {no:9, code:'Y-S-CR',tag:'크',  name:'벨베티 크리스피 120g',        grp:'요거트'},
+  {no:10,code:'Y-P-KK',tag:'카',  name:'플레인 카카오 120g',          grp:'요거트'},
+  {no:11,code:'Y-P-PR',tag:'푸',  name:'플레인 푸룬 130g',            grp:'요거트'},
+  {no:12,code:'Y-S-CC',tag:'초',  name:'벨베티 초코소보로 120g',      grp:'요거트'},
+  {no:13,code:'D-P-S0',tag:'마S', name:'마시는 그릭요거트 750ml',     grp:'마시는'},
+  {no:14,code:'D-P-L0',tag:'마L', name:'마시는 그릭요거트 1.8L',      grp:'마시는'},
+  {no:15,code:'T-3-BR',tag:'블토',name:'블루베리콩포트 토핑 (30g×3)', grp:'토핑'},
+  {no:16,code:'T-3-CR',tag:'크토',name:'크리스피그래놀라 토핑 (30g×3)',grp:'토핑'},
+  {no:17,code:'T-3-CC',tag:'초토',name:'초코소보로그래놀라 토핑 (30g×3)',grp:'토핑'},
+  {no:18,code:'T-3-ST',tag:'스토',name:'딸기콩포트 토핑 (30g×3)',     grp:'토핑'},
+  {no:19,code:'T-3-KK',tag:'카토',name:'카카오그래놀라 토핑 (30g×3)', grp:'토핑'},
+  {no:20,code:'T-1-HS',tag:'꿀',  name:'허니스틱 (10포)',             grp:'굿즈'},
+  {no:21,code:'G-1-FI',tag:'줄자',name:'피팅줄자',                    grp:'굿즈'},
+  {no:22,code:'G-1-IC',tag:'파우치',name:'아이스 파우치',             grp:'굿즈'},
+  {no:23,code:'G-1-MA',tag:'메이커',name:'그릭요거트 메이커',          grp:'굿즈'},
+  {no:24,code:'Y-P-ST',tag:'스',  name:'플레인 딸기 130g',            grp:'요거트'},
+  {no:25,code:'Y-P-PC',tag:'복',  name:'플레인 복숭아 130g',          grp:'요거트'},
+];
+const CODE_TO_NO={};
+PRODUCTS.forEach(p=>CODE_TO_NO[p.code]=p.no);
+
+// ════════════════════════════════════════════════════
+// 페이지 라우팅
+// ════════════════════════════════════════════════════
+const PAGES=['upload','prod-up','vfc','vpv','vmx','vac','pview'];
+function goPage(page,navEl){
+  PAGES.forEach(p=>{
+    const pg=document.getElementById('page-'+p);
+    if(pg) pg.className='page'+(p===page?' active':'');
+  });
+  document.querySelectorAll('.sb-item').forEach(el=>el.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+  else {
+    const ni=document.getElementById('nav-'+page);
+    if(ni) ni.classList.add('active');
+  }
+  if(page==='pview'){ loadSkuList(); loadItemList2(); }
+  if(['vfc','vpv','vmx','vac'].includes(page)){
+    const type=page.slice(1);
+    VW_STATE[type].offset=0;
+    renderView(type);
+  }
+}
+
+// ════════════════════════════════════════════════════
+// 상품 업로드
+// ════════════════════════════════════════════════════
+let productData={items:[],skus:[]};
+function parseProductFile(file){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      const iSheet=wb.Sheets[wb.SheetNames.find(n=>n.toLowerCase().includes('item'))||wb.SheetNames[1]];
+      const sSheet=wb.Sheets[wb.SheetNames.find(n=>n.toLowerCase().includes('sku'))||wb.SheetNames[0]];
+      const items=iSheet?XLSX.utils.sheet_to_json(iSheet,{defval:''}):[];
+      const skus=sSheet?XLSX.utils.sheet_to_json(sSheet,{defval:''}):[];
+      productData={items,skus};
+      // dropzone 업데이트
+      const ico=document.getElementById('productIco');
+      const main=document.getElementById('productMain');
+      const sub=document.getElementById('productSub');
+      const drop=document.getElementById('productDrop');
+      if(ico) ico.textContent='✅';
+      if(main) main.textContent=file.name;
+      if(sub) sub.textContent='품목 '+items.length+'개 · SKU '+skus.length+'개';
+      if(drop) drop.classList.add('loaded');
+      // 미리보기 요약
+      const prev=document.getElementById('productPreview');
+      const sum=document.getElementById('productSum');
+      if(sum) sum.innerHTML=
+        '<span style="font-size:11px;color:var(--t3)">품목 닉네임: '+items.slice(0,10).map(x=>x.nick||x['닉네임']||'?').join(' · ')+(items.length>10?' …':'')+'</span><br>'+
+        '<span style="font-size:11px;color:var(--t3)">SKU 닉네임: '+skus.slice(0,10).map(x=>x.nick||x['닉네임']||'?').join(' · ')+(skus.length>10?' …':'')+'</span>';
+      if(prev) prev.style.display='block';
+      const btn=document.getElementById('productBtn');
+      if(btn) btn.disabled=false;
+      showResult('productResult','','');
+    }catch(err){showResult('productResult','err','❌ 파싱 오류: '+err.message);}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+async function uploadProductFile(){
+  if(!window.db){showResult('productResult','err','❌ Firebase 미연결');return;}
+  const btn=document.getElementById('productBtn');
+  btn.disabled=true;btn.innerHTML='⏳ 업로드 중...';
+  showResult('productResult','','');
+  try{
+    const{items,skus}=productData;
+    let iOk=0,sOk=0;
+    await Promise.all([
+      ...items.map(r=>{
+        const code=r.code||r['code']||r['코드'];
+        if(!code) return Promise.resolve();
+        const status=r.status||r['status']||'상시';
+        return window.fsSetDoc(window.fsDoc(window.db,'items',String(code)),{
+          code:String(code),no:Number(r.no||r['no'])||null,
+          nick:r.nick||r['닉네임']||'',name:r.name||r['상품명']||'',
+          alias:r.alias||r['별칭']||'',category:r.category||r['카테고리']||'',
+          status,memo:r.memo||r['메모']||null,
+          updatedAt:new Date().toISOString()
+        },{merge:true}).then(()=>iOk++);
+      }),
+      ...skus.map(r=>{
+        const code=r.code||r['code']||r['상품코드'];
+        if(!code) return Promise.resolve();
+        const status=r.status||r['status']||'상시';
+        return window.fsSetDoc(window.fsDoc(window.db,'skus',String(code)),{
+          code:String(code),no:Number(r.no||r['no'])||null,
+          nick:r.nick||r['닉네임']||'',name:r.name||r['상품명']||'',
+          type:r.type||r['유형']||'',status,
+          priceNormal:r.priceNormal||null,priceDisc:r.priceDisc||null,
+          priceMax:r.priceMax||null,ship:r.ship||'',
+          memo:r.memo||r['메모']||null,
+          updatedAt:new Date().toISOString()
+        },{merge:true}).then(()=>sOk++);
+      })
+    ]);
+    showResult('productResult','ok','✅ 완료 — 품목 '+iOk+'개 · SKU '+sOk+'개 저장');
+    addLog('fc','ok','상품 업로드','items '+iOk+'개 · skus '+sOk+'개');
+  }catch(err){showResult('productResult','err','❌ '+err.message);}
+  btn.disabled=false;btn.innerHTML='🛍️ Firestore에 업로드 (items + skus)';
+}
+
+// ════════════════════════════════════════════════════
+// 상품 조회 공통
+// ════════════════════════════════════════════════════
+const HIDDEN_FIELDS=new Set(['active','discontinuedAt','id','__id__']);
+const PF={status:'all',type:'all',sort:'no',istatus:'all',icat:'all',isort:'no'};
+let skuAll=[],itemAll2=[];
+
+const COL_LABEL2={no:'No',code:'코드',nick:'닉네임',name:'상품명',type:'유형',status:'상태',
+  category:'분류',alias:'별칭',memo:'메모',updatedAt:'수정일',
+  priceNormal:'정상가',priceDisc:'할인가',priceMax:'최대할인',ship:'배송'};
+
+function getColLabel2(k){return COL_LABEL2[k]||k;}
+
+function collectKeys(rows,order){
+  const seen=new Set(order);
+  const extra=[];
+  rows.forEach(r=>Object.keys(r).forEach(k=>{
+    if(!seen.has(k)&&!HIDDEN_FIELDS.has(k)){seen.add(k);extra.push(k);}
+  }));
+  return [...order.filter(k=>rows.some(r=>k in r)&&!HIDDEN_FIELDS.has(k)),...extra];
+}
+
+function renderBadge(v,colors,bgs){
+  const sv=v||'';
+  if(!sv) return '<span style="color:var(--t4)">—</span>';
+  return '<span style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;'
+    +'background:'+(bgs[sv]||'rgba(0,0,0,.05)')+';color:'+(colors[sv]||'#888')+'">'+sv+'</span>';
+}
+
+const STATUS_C={'상시':'#1a8a4a','단종예정':'#a16207','런칭예정':'#3a3af0','단종':'#d42020'};
+const STATUS_B={'상시':'rgba(26,138,74,.1)','단종예정':'rgba(254,249,195,.6)','런칭예정':'rgba(58,58,240,.1)','단종':'rgba(212,32,32,.08)'};
+const TYPE_C={'상시운영':'#1a8a4a','슈퍼적립':'#1a56c8','행사운영':'#c45a10','행사제안불가':'#888'};
+const TYPE_B={'상시운영':'rgba(26,138,74,.1)','슈퍼적립':'rgba(26,86,200,.1)','행사운영':'rgba(196,90,16,.1)','행사제안불가':'rgba(0,0,0,.05)'};
+const CAT_C={'그릭요거트 본품':'#3a3af0','마시는 그릭요거트':'#1a56c8','토핑':'#c45a10','굿즈/기타':'#888'};
+const CAT_B={'그릭요거트 본품':'rgba(58,58,240,.1)','마시는 그릭요거트':'rgba(26,86,200,.1)','토핑':'rgba(196,90,16,.1)','굿즈/기타':'rgba(0,0,0,.05)'};
+
+function renderCell(k,v){
+  if(k==='no') return (v!=null&&v!==''&&Number(v)!==99)?'<span style="font-size:11px;font-weight:700;color:var(--t3)">'+v+'</span>':'—';
+  if(k==='nick') return '<span class="nick-badge">'+( v||'—')+'</span>';
+  if(k==='status') return renderBadge(v,STATUS_C,STATUS_B);
+  if(k==='type') return renderBadge(v,TYPE_C,TYPE_B);
+  if(k==='category') return renderBadge(v,CAT_C,CAT_B);
+  if(k==='code') return '<code style="font-size:11px;color:var(--t2)">'+(v||'—')+'</code>';
+  if(k==='updatedAt') return '<span style="font-size:10.5px;color:var(--t3)">'+(v?String(v).slice(0,10):'—')+'</span>';
+  if(v===null||v===undefined||v==='') return '<span style="color:var(--t4)">—</span>';
+  return '<span style="font-size:12px">'+String(v)+'</span>';
+}
+
+function copyByData(td){
+  const val=td.getAttribute('data-copy');
+  if(!val) return;
+  navigator.clipboard.writeText(val).then(()=>{
+    const orig=td.style.background;
+    td.style.background='rgba(58,58,240,.12)';
+    setTimeout(()=>{td.style.background=orig;},600);
+  }).catch(()=>{});
+}
+
+function setSF(key,val,el,pfx){
+  PF[key]=val;
+  document.querySelectorAll('[id^="'+pfx+'"]').forEach(e=>e.className='fp');
+  el.className='fp on';
+  if(['status','type','sort'].includes(key)) renderSkuList();
+  else renderItemList2();
+}
+
+function setProdTab(tab){
+  document.getElementById('pview-sku').style.display=tab==='sku'?'':'none';
+  document.getElementById('pview-item').style.display=tab==='item'?'':'none';
+  document.getElementById('ptab-sku').className='prod-tab'+(tab==='sku'?' on':'');
+  document.getElementById('ptab-item').className='prod-tab'+(tab==='item'?' on':'');
+}
+
+// ── SKU 목록 ──
+const SKU_COL=['no','code','nick','name','type','status','priceNormal','priceDisc','priceMax','ship','memo','updatedAt'];
+const SKU_ORD={상시:0,단종예정:1,런칭예정:2,단종:3};
+const TYP_ORD={상시운영:0,슈퍼적립:1,행사운영:2,행사제안불가:3};
+
+async function loadSkuList(){
+  const tbody=document.getElementById('sku-tbody');
+  if(!tbody) return;
+  // 즉시 빈 상태 표시
+  if(!window.db||!window.fsGetDocs||!window.fsCollection){
+    skuAll=[];renderSkuList();return;
+  }
+  try{
+    const snap=await window.fsGetDocs(window.fsCollection(window.db,'skus'));
+    skuAll=[];
+    snap.forEach(d=>{
+      const dt=d.data();
+      skuAll.push({id:d.id,...dt,no:dt.no!=null?Number(dt.no):99});
+    });
+  }catch(e){console.warn('[sku]',e);skuAll=[];}
+  renderSkuList();
+}
+
+function renderSkuList(){
+  const q=(document.getElementById('pv-sku-search')?.value||'').toLowerCase();
+  const rows=skuAll.filter(x=>{
+    if(PF.status!=='all'&&(x.status||'상시')!==PF.status) return false;
+    if(PF.type!=='all'&&(x.type||'')!==PF.type) return false;
+    if(q&&!((x.code||'')+(x.nick||'')+(x.name||'')).toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b)=>{
+    if(PF.sort==='no') return (Number(a.no)||99)-(Number(b.no)||99);
+    if(PF.sort==='type') return (TYP_ORD[a.type]??9)-(TYP_ORD[b.type]??9)||((Number(a.no)||99)-(Number(b.no)||99));
+    if(PF.sort==='status') return (SKU_ORD[a.status||'상시']??9)-(SKU_ORD[b.status||'상시']??9)||((Number(a.no)||99)-(Number(b.no)||99));
+    if(PF.sort==='new') return new Date(b.updatedAt||0)-new Date(a.updatedAt||0);
+    if(PF.sort==='old') return new Date(a.updatedAt||0)-new Date(b.updatedAt||0);
+    return 0;
+  });
+  const cnt=document.getElementById('pv-sku-cnt');
+  if(cnt) cnt.textContent=rows.length+'개';
+  const tbody=document.getElementById('sku-tbody');
+  if(!tbody) return;
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="99" class="reg-empty">검색 결과 없음</td></tr>';return;}
+  const cols=collectKeys(rows,SKU_COL);
+  const thead=document.getElementById('sku-thead');
+  if(thead) thead.innerHTML=cols.map(k=>'<th>'+getColLabel2(k)+'</th>').join('');
+  let out='';
+  rows.forEach(x=>{
+    let cells='';
+    cols.forEach(k=>{
+      const v=x[k];
+      const safe=v!=null?String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;'):'';
+      cells+='<td data-copy="'+safe+'" onclick="copyByData(this)">'+renderCell(k,v)+'</td>';
+    });
+    out+='<tr>'+cells+'</tr>';
+  });
+  tbody.innerHTML=out;
+}
+
+// ── 품목 목록 ──
+const ITEM_COL=['no','code','nick','name','category','status','memo','updatedAt'];
+const ITEM_FALLBACK=PRODUCTS.map(p=>({no:p.no,code:p.code,nick:p.tag,name:p.name,status:'상시'}));
+
+async function loadItemList2(){
+  // 즉시 폴백으로 렌더
+  itemAll2=ITEM_FALLBACK.map(x=>({...x}));
+  renderItemList2();
+  if(!window.db||!window.fsGetDocs||!window.fsCollection) return;
+  try{
+    const snap=await window.fsGetDocs(window.fsCollection(window.db,'items'));
+    if(snap.size>0){
+      itemAll2=[];
+      snap.forEach(d=>{
+        const dt=d.data();
+        const code=dt.code||d.id;
+        const no=dt.no!=null?Number(dt.no):(CODE_TO_NO[code]||99);
+        itemAll2.push({id:d.id,...dt,no});
+      });
+      renderItemList2();
+    }
+  }catch(e){console.warn('[item]',e);}
+}
+
+function renderItemList2(){
+  const q=(document.getElementById('pv-item-search')?.value||'').toLowerCase();
+  const rows=itemAll2.filter(x=>{
+    if(PF.istatus!=='all'&&(x.status||'상시')!==PF.istatus) return false;
+    if(PF.icat!=='all'&&(x.category||'')!==PF.icat) return false;
+    if(q&&!((x.code||'')+(x.nick||'')+(x.name||'')).toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b)=>{
+    if(PF.isort==='no') return (Number(a.no)||99)-(Number(b.no)||99);
+    if(PF.isort==='status') return (SKU_ORD[a.status||'상시']??9)-(SKU_ORD[b.status||'상시']??9)||((Number(a.no)||99)-(Number(b.no)||99));
+    if(PF.isort==='new') return new Date(b.updatedAt||0)-new Date(a.updatedAt||0);
+    if(PF.isort==='old') return new Date(a.updatedAt||0)-new Date(b.updatedAt||0);
+    return (Number(a.no)||99)-(Number(b.no)||99);
+  });
+  const cnt=document.getElementById('pv-item-cnt');
+  if(cnt) cnt.textContent=rows.length+'개';
+  const tbody=document.getElementById('item-tbody');
+  if(!tbody) return;
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="99" class="reg-empty">검색 결과 없음</td></tr>';return;}
+  const cols=collectKeys(rows,ITEM_COL);
+  const thead=document.getElementById('item-thead');
+  if(thead) thead.innerHTML=cols.map(k=>'<th>'+getColLabel2(k)+'</th>').join('');
+  let out='';
+  rows.forEach(x=>{
+    let cells='';
+    cols.forEach(k=>{
+      const v=x[k];
+      const safe=v!=null?String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;'):'';
+      cells+='<td data-copy="'+safe+'" onclick="copyByData(this)">'+renderCell(k,v)+'</td>';
+    });
+    out+='<tr>'+cells+'</tr>';
+  });
+  tbody.innerHTML=out;
+}
+
+// ════════════════════════════════════════════════════
+// 데이터 조회
+// ════════════════════════════════════════════════════
+const DOW_KO2=['일','월','화','수','목','금','토'];
+const VW_STATE={fc:{offset:0},pv:{offset:0},mx:{offset:0},ac:{offset:0}};
+
+function vwNav(type,dir){VW_STATE[type].offset+=dir;renderView(type);}
+function vwThisWeek(type){VW_STATE[type].offset=0;renderView(type);}
+
+function vwWeekRange(offset){
+  const d=new Date();
+  const dow=d.getDay();
+  d.setDate(d.getDate()-(dow===0?6:dow-1)+offset*7);
+  const mon=new Date(d);
+  const sun=new Date(d);sun.setDate(d.getDate()+6);
+  return{mon,sun};
+}
+function vwWeekLabel(mon){
+  const y=mon.getFullYear(),m=mon.getMonth();
+  const first=new Date(y,m,1);
+  const fd=first.getDay();
+  const w1=new Date(first);w1.setDate(first.getDate()-((fd===0?6:fd-1)));
+  const wn=Math.floor((mon-w1)/86400000/7)+1;
+  return y+'년 '+(m+1)+'월 '+wn+'주차';
+}
+function vwIso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+async function renderView(type){
+  const{mon,sun}=vwWeekRange(VW_STATE[type].offset);
+  const label=vwWeekLabel(mon);
+  const sub=(mon.getMonth()+1)+'/'+mon.getDate()+'(월) ~ '+(sun.getMonth()+1)+'/'+sun.getDate()+'(일)';
+  const el=id=>document.getElementById(type.startsWith('v')?type+'-'+id:'v'+type+'-'+id);
+  const eid=s=>document.getElementById('v'+type+'-'+s);
+  if(eid('label')) eid('label').textContent=label;
+  if(eid('sub'))   eid('sub').textContent=sub;
+
+  // 품목 목록 (단종 제외, Firebase→PRODUCTS 폴백)
+  let vprods=PRODUCTS;
+  try{
+    if(window.db&&window.fsGetDocs&&window.fsCollection){
+      const snap=await window.fsGetDocs(window.fsCollection(window.db,'items'));
+      if(snap.size>0){
+        const tmp=[];
+        snap.forEach(d=>{
+          const dt=d.data();
+          if(dt.status==='단종') return;
+          tmp.push({no:Number(dt.no||CODE_TO_NO[dt.code||d.id]||99),code:dt.code||d.id,tag:dt.nick||'',name:dt.name||''});
+        });
+        tmp.sort((a,b)=>a.no-b.no);
+        if(tmp.length) vprods=tmp;
+      }
+    }
+  }catch(e){}
+
+  const today=vwIso(new Date());
+  const startIso=vwIso(mon),endIso=vwIso(sun);
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);days.push(d);}
+
+  // 테이블 헤더
+  const thCols=days.map(d=>{
+    const iso=vwIso(d);
+    const dow=d.getDay();
+    const cls=iso===today?'col-today':(dow===0||dow===6?'col-wknd':'');
+    return'<th class="'+cls+'">'+(d.getMonth()+1)+'/'+d.getDate()+'<br>'+DOW_KO2[dow]+'</th>';
+  }).join('');
+  const thead=document.getElementById('v'+type+'-thead');
+  if(thead) thead.innerHTML='<th style="text-align:center;width:30px">No</th><th>품목</th>'+thCols+'<th>합계</th>';
+
+  const tbody=document.getElementById('v'+type+'-tbody');
+  if(tbody) tbody.innerHTML='<tr><td colspan="9" style="padding:24px;text-align:center;color:var(--t4)">⏳ 조회 중...</td></tr>';
+
+  // Firestore 조회
+  let dataMap={};
+  try{
+    if(window.db&&window.fsGetDocs&&window.fsQuery&&window.fsWhere&&window.fsCollection){
+      const q=window.fsQuery(
+        window.fsCollection(window.db,'shipment'),
+        window.fsWhere('date','>=',startIso),
+        window.fsWhere('date','<=',endIso)
+      );
+      const snap=await window.fsGetDocs(q);
+      snap.forEach(d=>{
+        const dt=d.data();
+        if(dt[type]!=null) dataMap[dt.date+'_'+dt.productCode]=dt[type];
+      });
+    }
+  }catch(e){console.warn('[view]',e);}
+
+  let totalSum=0,okCount=0,missCount=0;
+  let rows='';
+  vprods.forEach(p=>{
+    let rowSum=0;
+    let cells='';
+    days.forEach(d=>{
+      const iso=vwIso(d);
+      const dow=d.getDay();
+      if(dow===0||dow===6){cells+='<td class="col-wknd">—</td>';return;}
+      const key=iso+'_'+p.code;
+      const val=dataMap[key];
+      const isFuture=iso>today;
+      if(isFuture){
+        if(val!=null&&val!==undefined){rowSum+=val;okCount++;cells+='<td class="col-val">'+val.toLocaleString()+'</td>';}
+        else cells+='<td class="col-zero" style="color:var(--t4)">—</td>';
+        return;
+      }
+      if(val==null){missCount++;cells+='<td class="col-miss" title="'+p.name+' '+iso+' 미기입" onclick="goPage(\'upload\',document.getElementById(\'nav-upload\'))">⚠️</td>';return;}
+      if(val===0){okCount++;cells+='<td class="col-zero">0</td>';return;}
+      rowSum+=val;totalSum+=val;okCount++;
+      cells+='<td class="col-val">'+val.toLocaleString()+'</td>';
+    });
+    rows+='<tr><td>'+( p.no||'')+'</td><td><span class="vw-nick '+type+'">'+(p.tag||'')+'</span>'+(p.name||p.tag||'')+'</td>'+cells+'<td class="col-val">'+(rowSum>0?rowSum.toLocaleString():'—')+'</td></tr>';
+  });
+
+  // 합계 행
+  let totCells='';
+  days.forEach(d=>{
+    const dow=d.getDay();
+    if(dow===0||dow===6){totCells+='<td class="col-wknd">—</td>';return;}
+    const iso=vwIso(d);
+    let s=0;vprods.forEach(p=>{const v=dataMap[iso+'_'+p.code];if(v) s+=v;});
+    totCells+='<td>'+(s>0?s.toLocaleString():'—')+'</td>';
+  });
+  rows+='<tr class="tot-row"><td></td><td>합계</td>'+totCells+'<td>'+totalSum.toLocaleString()+'</td></tr>';
+  if(tbody) tbody.innerHTML=rows;
+
+  if(eid('total')) eid('total').textContent=totalSum.toLocaleString();
+  if(eid('ok'))    eid('ok').textContent=okCount+'셀';
+  if(eid('miss'))  eid('miss').textContent=missCount>0?missCount+'셀':'없음';
+}
+
+</script>
+
+<!-- ── Firebase SDK (ESM) ── -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, getDocs, setDoc, deleteField, collection, query, where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBB3XxL4kJz5uGVRUn-eLPYirJsuwuiEIU",
+  authDomain: "data-hub-app-2026.firebaseapp.com",
+  projectId: "data-hub-app-2026",
+  storageBucket: "data-hub-app-2026.firebasestorage.app",
+  messagingSenderId: "127013070764",
+  appId: "1:127013070764:web:d10d5d24c5b14c31b13c09"
+};
+
+try {
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+  window.db            = db;
+  window.fsDoc         = doc;
+  window.fsGetDoc      = getDoc;
+  window.fsGetDocs     = getDocs;
+  window.fsSetDoc      = setDoc;
+  window.fsDeleteField = deleteField;
+  window.fsCollection  = collection;
+  window.fsQuery       = query;
+  window.fsWhere       = where;
+  document.querySelector('.hb-dot').style.background = 'var(--ac)';
+  document.querySelector('.hb-st').textContent        = 'Firebase 연결됨';
+  console.log('[Firebase] Firestore 초기화 완료 — project: data-hub-app-2026');
+  // Firebase 초기화 후 미기입 체크 실행
+  setTimeout(checkAllMissing, 800);
+} catch(e) {
+  document.querySelector('.hb-dot').style.background = 'var(--red)';
+  document.querySelector('.hb-st').style.color       = 'var(--red)';
+  document.querySelector('.hb-st').textContent        = '연결 실패';
+  console.error('[Firebase] 초기화 실패:', e);
+}
 </script>
 </body>
 </html>
